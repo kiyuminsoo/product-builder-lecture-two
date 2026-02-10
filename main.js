@@ -37,20 +37,26 @@ themeToggle.addEventListener('click', () => {
 
 function drawNumbers() {
     lottoNumbersContainer.innerHTML = '';
-    const numbers = new Set();
-    while (numbers.size < 6) {
-        const randomNumber = Math.floor(Math.random() * 45) + 1;
-        numbers.add(randomNumber);
+    for (let i = 0; i < 5; i++) {
+        const lottoRow = document.createElement('div');
+        lottoRow.classList.add('lotto-row');
+
+        const numbers = new Set();
+        while (numbers.size < 6) {
+            const randomNumber = Math.floor(Math.random() * 45) + 1;
+            numbers.add(randomNumber);
+        }
+
+        const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
+
+        sortedNumbers.forEach(number => {
+            const numberElement = document.createElement('div');
+            numberElement.classList.add('lotto-number');
+            numberElement.textContent = number;
+            lottoRow.appendChild(numberElement);
+        });
+        lottoNumbersContainer.appendChild(lottoRow);
     }
-
-    const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
-
-    sortedNumbers.forEach(number => {
-        const numberElement = document.createElement('div');
-        numberElement.classList.add('lotto-number');
-        numberElement.textContent = number;
-        lottoNumbersContainer.appendChild(numberElement);
-    });
 }
 
 drawButton.addEventListener('click', drawNumbers);
