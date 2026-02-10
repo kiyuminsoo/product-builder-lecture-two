@@ -8,27 +8,47 @@
 </head>
 <body>
     <button id="theme-toggle">다크 모드 전환</button>
-    <div class="container">
-        <h1>Lotto Drawing</h1>
-        <div class="lotto-numbers">
+    <div class="main-content-wrapper">
+        <div id="form-section" class="container partnership-form-container">
+            <h2>제휴 문의</h2>
+            <form action="https://formspree.io/f/mdalaond" method="POST">
+                <label for="name">이름:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">이메일:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">메시지:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit">문의 제출</button>
+            </form>
+            <button id="skip-button" class="skip-button">로또 보러가기</button>
         </div>
-        <button id="draw-button">Draw Numbers</button>
-    </div>
 
-    <div class="container partnership-form-container">
-        <h2>제휴 문의</h2>
-        <form action="https://formspree.io/f/mdalaond" method="POST">
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" required>
+        <div id="lotto-section" class="container" style="display: none;">
+            <h1>Lotto Drawing</h1>
+            <div class="lotto-numbers">
+            </div>
+            <button id="draw-button">Draw Numbers</button>
 
-            <label for="email">이메일:</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="message">메시지:</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-
-            <button type="submit">문의 제출</button>
-        </form>
+            <!-- Disqus Comments Section -->
+            <div id="disqus_thread" style="margin-top: 50px;"></div>
+            <script>
+                var disqus_config = function () {
+                    this.page.url = window.location.href;
+                    this.page.identifier = 'lotto-page-unique-identifier'; // Replace with a unique identifier for this page
+                };
+                (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://yuminsu.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <!-- End Disqus Comments Section -->
+        </div>
     </div>
     <script src="main.js"></script>
 </body>

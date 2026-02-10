@@ -3,6 +3,10 @@ const drawButton = document.getElementById('draw-button');
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
 
+const formSection = document.getElementById('form-section');
+const lottoSection = document.getElementById('lotto-section');
+const skipButton = document.getElementById('skip-button');
+
 // Function to set the theme
 function setTheme(theme) {
     if (theme === 'dark') {
@@ -34,6 +38,30 @@ themeToggle.addEventListener('click', () => {
         setTheme('dark');
     }
 });
+
+// Function to load Disqus comments dynamically
+function loadDisqus() {
+    if (window.DISQUS) {
+        window.DISQUS.reset({
+            reload: true,
+            config: function () {
+                this.page.url = window.location.href;
+                this.page.identifier = 'lotto-page-unique-identifier';
+            }
+        });
+    } else {
+        // Fallback for initial load if DISQUS object is not ready
+        // The script in index.html should handle initial loading if lottoSection is visible
+    }
+}
+
+skipButton.addEventListener('click', () => {
+    formSection.style.display = 'none';
+    lottoSection.style.display = 'block';
+    // Optionally, if Disqus was not loaded due to lottoSection being hidden, load it now
+    loadDisqus();
+});
+
 
 function drawNumbers() {
     lottoNumbersContainer.innerHTML = '';
@@ -82,4 +110,8 @@ function drawNumbers() {
 drawButton.addEventListener('click', drawNumbers);
 
 // Initial draw
-drawNumbers();
+// If lottoSection is not hidden (e.g., direct access), draw numbers
+if (lottoSection.style.display !== 'none') {
+    drawNumbers();
+    loadDisqus(); // Load Disqus if lotto section is visible on initial load
+}
