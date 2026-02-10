@@ -67,10 +67,12 @@ function drawNumbers() {
 
         const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
 
-        sortedNumbers.forEach(number => {
+        sortedNumbers.forEach((number, index) => {
             const numberElement = document.createElement('div');
             numberElement.classList.add('lotto-number');
             numberElement.textContent = number;
+            // Apply staggered animation delay
+            numberElement.style.animationDelay = `${index * 0.1}s`;
             lottoRow.appendChild(numberElement);
         });
         lottoNumbersContainer.appendChild(lottoRow);
