@@ -1,14 +1,43 @@
+:root {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --container-bg-color: #ffffff;
+    --button-bg-color: #4CAF50;
+    --button-text-color: white;
+    --lotto-number-bg-color: #fff;
+    --lotto-number-border-color: #ccc;
+    --lotto-number-text-color: #333;
+}
+
+body.dark-mode {
+    --bg-color: #333;
+    --text-color: #f0f0f0;
+    --container-bg-color: #444;
+    --button-bg-color: #66bb6a;
+    --button-text-color: white;
+    --lotto-number-bg-color: #555;
+    --lotto-number-border-color: #777;
+    --lotto-number-text-color: #f0f0f0;
+}
+
 body {
     font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
     text-align: center;
+    background-color: var(--container-bg-color);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
 .lotto-numbers {
@@ -21,14 +50,21 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #ccc;
+    background-color: var(--lotto-number-bg-color);
+    border: 2px solid var(--lotto-number-border-color);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
     margin: 0 5px;
     font-weight: bold;
+    color: var(--lotto-number-text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+h1 {
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 #draw-button {
@@ -37,6 +73,20 @@ body {
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
     color: white;
 }
