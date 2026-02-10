@@ -1,117 +1,81 @@
-const lottoNumbersContainer = document.querySelector('.lotto-numbers');
-const drawButton = document.getElementById('draw-button');
-const themeToggle = document.getElementById('theme-toggle');
-const body = document.body;
+// The link to your model provided by Teachable Machine export panel
+const URL = "https://teachablemachine.withgoogle.com/models/bk89dlKo6/";
 
-const formSection = document.getElementById('form-section');
-const lottoSection = document.getElementById('lotto-section');
-const skipButton = document.getElementById('skip-button');
+let model, webcam, labelContainer, maxPredictions;
+let isPredicting = false; // Flag to control prediction loop
 
-// Function to set the theme
-function setTheme(theme) {
-    if (theme === 'dark') {
-        body.classList.add('dark-mode');
-        themeToggle.textContent = '라이트 모드 전환';
-    } else {
-        body.classList.remove('dark-mode');
-        themeToggle.textContent = '다크 모드 전환';
+const startButton = document.getElementById("start-button");
+const webcamContainer = document.getElementById("webcam-container");
+const videoElement = document.getElementById("webcam");
+
+// Load the image model and setup the webcam
+async function init() {
+    const modelURL = URL + "model.json";
+    const metadataURL = URL + "metadata.json";
+
+    // Load the model and metadata
+    model = await tmImage.load(modelURL, metadataURL);
+    maxPredictions = model.getTotalClasses();
+
+    // Convenience function to setup a webcam
+    const flip = true; // whether to flip the webcam
+    webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+    await webcam.setup({ facingMode: "user" }); // Use user-facing camera
+    webcam.canvas.style.display = 'none'; // Hide the canvas as we'll use the video element
+
+    // Append webcam video to the DOM
+    webcamContainer.appendChild(videoElement);
+    videoElement.srcObject = webcam.stream;
+    
+    labelContainer = document.getElementById("label-container");
+    for (let i = 0; i < maxPredictions; i++) {
+        // Create a div for each class prediction
+        labelContainer.appendChild(document.createElement("div"));
     }
-    localStorage.setItem('theme', theme);
+
+    startButton.textContent = "Stop Classification";
+    isPredicting = true;
+    window.requestAnimationFrame(loop);
 }
 
-// Check for saved theme preference or system preference
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-    setTheme(savedTheme);
-} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    // If no saved theme, check system preference
-    setTheme('dark');
-} else {
-    setTheme('light'); // Default to light mode
+async function loop() {
+    if (isPredicting) {
+        webcam.update(); // update the webcam frame
+        await predict();
+        window.requestAnimationFrame(loop);
+    }
 }
 
-// Event listener for theme toggle button
-themeToggle.addEventListener('click', () => {
-    if (body.classList.contains('dark-mode')) {
-        setTheme('light');
+// Run the webcam image through the image model
+async function predict() {
+    // predict can take in an image, video or canvas html element
+    // We will use the video element directly for prediction
+    const prediction = await model.predict(videoElement);
+    for (let i = 0; i < maxPredictions; i++) {
+        const classPrediction =
+            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+        labelContainer.childNodes[i].innerHTML = classPrediction;
+    }
+}
+
+startButton.addEventListener('click', () => {
+    if (!isPredicting) {
+        init(); // Start the webcam and prediction
     } else {
-        setTheme('dark');
+        stopPrediction(); // Stop the webcam and prediction
     }
 });
 
-// Function to load Disqus comments dynamically
-function loadDisqus() {
-    if (window.DISQUS) {
-        window.DISQUS.reset({
-            reload: true,
-            config: function () {
-                this.page.url = window.location.href;
-                this.page.identifier = 'lotto-page-unique-identifier';
-            }
-        });
-    } else {
-        // Fallback for initial load if DISQUS object is not ready
-        // The script in index.html should handle initial loading if lottoSection is visible
+function stopPrediction() {
+    isPredicting = false;
+    if (webcam) {
+        webcam.stop(); // Stop the webcam stream
+        videoElement.srcObject = null; // Clear the video element source
     }
+    startButton.textContent = "Start Classification";
+    labelContainer.innerHTML = ''; // Clear labels
 }
 
-skipButton.addEventListener('click', () => {
-    formSection.style.display = 'none';
-    lottoSection.style.display = 'block';
-    // Optionally, if Disqus was not loaded due to lottoSection being hidden, load it now
-    loadDisqus();
-});
-
-
-function drawNumbers() {
-    lottoNumbersContainer.innerHTML = '';
-
-    // ERL Bridge Model: Define 'Hot Numbers' based on a hypothetical analysis.
-    // These numbers will have a higher 'gravitational pull' in our model.
-    const hotNumbers = [1, 7, 10, 14, 19, 21, 27, 34, 38, 43, 45];
-    const weight = 3; // How much 'heavier' the hot numbers are.
-
-    for (let i = 0; i < 5; i++) {
-        const lottoRow = document.createElement('div');
-        lottoRow.classList.add('lotto-row');
-
-        // Create a weighted pool of numbers.
-        const weightedPool = [];
-        for (let j = 1; j <= 45; j++) {
-            weightedPool.push(j); // Add every number once.
-            if (hotNumbers.includes(j)) {
-                for (let k = 0; k < weight - 1; k++) {
-                    weightedPool.push(j); // Add the 'hot' numbers extra times.
-                }
-            }
-        }
-
-        const numbers = new Set();
-        while (numbers.size < 6) {
-            const randomIndex = Math.floor(Math.random() * weightedPool.length);
-            const randomNumber = weightedPool[randomIndex];
-            numbers.add(randomNumber);
-        }
-
-        const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
-
-        sortedNumbers.forEach((number, index) => {
-            const numberElement = document.createElement('div');
-            numberElement.classList.add('lotto-number');
-            numberElement.textContent = number;
-            // Apply staggered animation delay
-            numberElement.style.animationDelay = `${index * 0.1}s`;
-            lottoRow.appendChild(numberElement);
-        });
-        lottoNumbersContainer.appendChild(lottoRow);
-    }
-}
-
-drawButton.addEventListener('click', drawNumbers);
-
-// Initial draw
-// If lottoSection is not hidden (e.g., direct access), draw numbers
-if (lottoSection.style.display !== 'none') {
-    drawNumbers();
-    loadDisqus(); // Load Disqus if lotto section is visible on initial load
-}
+// Initialize on page load (optional, or wait for button click)
+// init(); 
+// The user will click the button to start, so no auto-init.
