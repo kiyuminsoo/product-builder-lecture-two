@@ -37,13 +37,31 @@ themeToggle.addEventListener('click', () => {
 
 function drawNumbers() {
     lottoNumbersContainer.innerHTML = '';
+
+    // ERL Bridge Model: Define 'Hot Numbers' based on a hypothetical analysis.
+    // These numbers will have a higher 'gravitational pull' in our model.
+    const hotNumbers = [1, 7, 10, 14, 19, 21, 27, 34, 38, 43, 45];
+    const weight = 3; // How much 'heavier' the hot numbers are.
+
     for (let i = 0; i < 5; i++) {
         const lottoRow = document.createElement('div');
         lottoRow.classList.add('lotto-row');
 
+        // Create a weighted pool of numbers.
+        const weightedPool = [];
+        for (let j = 1; j <= 45; j++) {
+            weightedPool.push(j); // Add every number once.
+            if (hotNumbers.includes(j)) {
+                for (let k = 0; k < weight - 1; k++) {
+                    weightedPool.push(j); // Add the 'hot' numbers extra times.
+                }
+            }
+        }
+
         const numbers = new Set();
         while (numbers.size < 6) {
-            const randomNumber = Math.floor(Math.random() * 45) + 1;
+            const randomIndex = Math.floor(Math.random() * weightedPool.length);
+            const randomNumber = weightedPool[randomIndex];
             numbers.add(randomNumber);
         }
 
