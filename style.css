@@ -154,3 +154,91 @@ body.dark-mode #theme-toggle {
 body.dark-mode #theme-toggle:hover {
     background-color: #0d47a1;
 }
+
+/* Partnership Form Styling */
+.partnership-form-container {
+    margin-top: 40px;
+    padding: 30px;
+}
+
+.partnership-form-container h2 {
+    font-size: 2em;
+    margin-bottom: 25px;
+    color: var(--text-color);
+    text-shadow: var(--h1-text-shadow);
+    transition: color 0.5s ease, text-shadow 0.5s ease;
+}
+
+.partnership-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.partnership-form-container label {
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.partnership-form-container input[type="text"],
+.partnership-form-container input[type="email"],
+.partnership-form-container textarea {
+    padding: 12px;
+    border: 1px solid var(--lotto-number-border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: var(--lotto-number-bg-color);
+    color: var(--text-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.partnership-form-container input[type="text"]:focus,
+.partnership-form-container input[type="email"]:focus,
+.partnership-form-container textarea:focus {
+    outline: none;
+    border-color: var(--button-bg-color);
+    box-shadow: 0 0 0 3px rgba(var(--button-bg-color-rgb), 0.3); /* Assuming RGB for dynamic shadow */
+}
+
+.partnership-form-container textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.partnership-form-container button[type="submit"] {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff; /* Different color for submit button */
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.partnership-form-container button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.4);
+    background-color: #0056b3;
+}
+
+.partnership-form-container button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+body.dark-mode .partnership-form-container button[type="submit"] {
+    background-color: #1a73e8;
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.4);
+}
+
+body.dark-mode .partnership-form-container button[type="submit"]:hover {
+    background-color: #0d47a1;
+    box-shadow: 0 8px 15px rgba(26, 115, 232, 0.5);
+}
