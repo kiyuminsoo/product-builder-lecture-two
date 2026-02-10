@@ -28,16 +28,21 @@ body.dark-mode {
     --h1-text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.5s ease, color 0.5s ease;
-    overflow: hidden; /* Prevent scrollbar from animation */
+    flex-direction: column; /* Allow content to stack vertically */
 }
 
 .container {
@@ -246,11 +251,12 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
 .main-content-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Align content to top within wrapper */
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* Ensure wrapper takes at least full viewport height */
     padding: 20px;
     box-sizing: border-box;
+    width: 100%; /* Ensure it spans full width */
 }
 
 .skip-button {
@@ -284,4 +290,5 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
     max-width: 500px;
     width: 100%;
 }
+
 
