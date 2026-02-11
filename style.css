@@ -29,6 +29,8 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
+    writing-mode: horizontal-tb; /* Ensure horizontal writing mode */
+    text-orientation: mixed; /* For mixed upright and sideways characters if applicable, though horizontal-tb is primary */
 }
 
 a {
@@ -447,7 +449,7 @@ img {
 /* --- Dating Chat Simulator Styles --- */
 
 .dating-chat-content {
-    max-width: 380px !important; /* Make it feel more like a mobile app */
+    max-width: 450px !important; /* Make it feel more like a mobile app, but wider */
     margin: 5vh auto !important; /* Position it higher */
     padding: 0 !important; /* Remove padding from modal-content */
     display: flex;
@@ -597,7 +599,7 @@ img {
 .message {
     display: flex;
     margin-bottom: 0.8rem; /* Increased spacing */
-    max-width: 80%;
+    max-width: 90%; /* Increased width for messages */
     word-wrap: break-word;
     font-size: 0.95rem;
     animation: message-pop-in 0.3s ease-out forwards;
@@ -757,3 +759,34 @@ img {
     background-color: var(--accent-primary);
     color: white;
 }
+
+/* Keyframe for "mini-book" title animation */
+@keyframes bookFlip {
+    0% {
+        transform: perspective(400px) rotateY(0deg) scale(1);
+        opacity: 1;
+    }
+    25% {
+        transform: perspective(400px) rotateY(-5deg) scale(0.98);
+        opacity: 0.95;
+    }
+    50% {
+        transform: perspective(400px) rotateY(5deg) scale(0.98);
+        opacity: 0.95;
+    }
+    100% {
+        transform: perspective(400px) rotateY(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+.book-title-animation {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+    transform-style: preserve-3d; /* Enable 3D transformations */
+    animation: bookFlip 4s ease-in-out infinite; /* Apply the animation */
+}
+
