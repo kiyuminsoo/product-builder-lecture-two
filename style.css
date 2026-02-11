@@ -218,6 +218,91 @@ img {
     color: var(--text-secondary);
 }
 
+/* Page-specific content styling */
+.page-container {
+    padding: 4rem 2rem;
+    max-width: 900px; /* Slightly narrower for readability */
+    margin: 0 auto;
+}
+
+.page-container h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--accent-primary);
+    position: relative;
+}
+
+.page-container h1::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-secondary);
+    margin: 1rem auto 0 auto;
+    border-radius: 2px;
+}
+
+
+.about-section, .contact-section {
+    background-color: var(--bg-secondary);
+    padding: 2.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px var(--shadow-color);
+}
+
+.about-section h2, .contact-section h2 {
+    font-size: 2rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.section-icon {
+    font-size: 1.8rem;
+    color: var(--accent-primary);
+}
+
+.about-section p, .contact-section p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+/* Contact Specific Styles */
+.contact-info-box {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.contact-info-box p {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.contact-info-box p strong {
+    color: var(--accent-secondary);
+}
+
+.contact-form-placeholder {
+    background-color: var(--bg-tertiary);
+    border: 1px dashed var(--border-color);
+    padding: 3rem;
+    text-align: center;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 2rem;
+}
+
 /* Modal Styles */
 .modal {
     display: none;

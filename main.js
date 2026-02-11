@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Global Error Handler
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error("An unhandled error occurred:", { message, source, lineno, colno, error });
+        alert(`Unhandled Error: ${message}\n\nPlease check the console for more details.`);
+        return true; // Prevent default browser error handling
+    };
 
     // --- Modal Handling ---
     const toolButtons = document.querySelectorAll('.btn[data-tool]');
@@ -670,8 +676,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const normalizedMessage = userMessage.toLowerCase().trim();
         let bestResponse = { response: aiPersona.fallbackResponse, score: 0 };
 
-        // Basic context: Include last user message in scoring
-        const fullContext = (conversationHistory.length > 0 ? conversationHistory.join(' ') + ' ' : '') + normalizedMessage;
+        // Add current user message to conversation history
+        conversationHistory.push(normalizedMessage);
+        // Trim conversation history to MAX_HISTORY
+        if (conversationHistory.length > MAX_HISTORY) {
+            conversationHistory.shift(); // Remove the oldest message
+        }
+
+        // Basic context: Include last 3 user messages for context
+        const fullContext = conversationHistory.join(' ');
         const normalizedContext = fullContext.toLowerCase();
 
         // Score based matching
@@ -683,22 +696,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            # // If a response has higher score, or same score but more specific keywords, choose it
+            // If a response has higher score, or same score but more specific keywords, choose it
             if (currentScore > bestResponse.score) {
                 bestResponse = { response: res.response, score: currentScore };
             } else if (currentScore > 0 && currentScore === bestResponse.score && res.keywords.length > (bestResponse.keywords ? bestResponse.keywords.length : 0)) {
-                # // Prefer more specific responses if scores are equal
+                // Prefer more specific responses if scores are equal
                 bestResponse = { response: res.response, score: currentScore, keywords: res.keywords };
             }
         });
 
-        # // If no specific response, use dynamic fallback
+        // If no specific response, use dynamic fallback
         if (bestResponse.score === 0 && aiPersona.dynamicFallbackResponses && aiPersona.dynamicFallbackResponses.length > 0) {
-            # // Pick a random dynamic fallback
+            // Pick a random dynamic fallback
             bestResponse.response = aiPersona.dynamicFallbackResponses[Math.floor(Math.random() * aiPersona.dynamicFallbackResponses.length)];
         }
 
-        # // Simulate thinking time
+        // Simulate thinking time
         await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500)); 
         
         return bestResponse.response;
