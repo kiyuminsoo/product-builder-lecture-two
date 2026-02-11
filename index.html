@@ -35,18 +35,18 @@
             <h2>Our Tools</h2>
             <div class="tools-grid">
                 <div class="tool-card" id="lotto-tool-card">
-                    <h3>AI 로또 번호 생성기</h3>
-                    <p>과거의 당첨 번호와 통계적 패턴을 학습한 AI가 행운의 번호 조합을 제안합니다. 재미로 즐기는 오늘의 운세처럼 가볍게 사용해 보세요.</p>
+                    <h3>로또 번호 생성기</h3>
+                    <p>과거의 당첨 번호와 통계적 패턴을 학습한 시스템이 행운의 번호 조합을 제안합니다. 재미로 즐기는 오늘의 운세처럼 가볍게 사용해 보세요.</p>
                     <button class="btn btn-secondary" data-tool="lotto">실행하기</button>
                 </div>
                 <div class="tool-card" id="face-tool-card">
-                    <h3>AI 얼굴상 분석</h3>
-                    <p>수천 장의 얼굴 데이터를 학습한 AI가 당신의 얼굴이 강아지상에 가까운지, 고양이상에 가까운지 분석해 드립니다. 친구들과 함께 즐겨보세요!</p>
+                    <h3>얼굴상 분석</h3>
+                    <p>수천 장의 얼굴 데이터를 학습한 시스템이 당신의 얼굴이 강아지상에 가까운지, 고양이상에 가까운지 분석해 드립니다. 친구들과 함께 즐겨보세요!</p>
                     <button class="btn btn-secondary" data-tool="face">실행하기</button>
                 </div>
                 <div class="tool-card" id="dating-chat-tool-card">
-                    <h3>AI 소개팅 대화 시뮬레이터</h3>
-                    <p>가상의 AI와 소개팅 대화를 나누며 당신의 대화 스킬을 테스트해보세요. 재치 있는 답변으로 AI의 마음을 사로잡을 수 있을까요?</p>
+                    <h3>소개팅 대화 시뮬레이터</h3>
+                    <p>가상의 상대와 소개팅 대화를 나누며 당신의 대화 스킬을 테스트해보세요. 재치 있는 답변으로 상대방의 마음을 사로잡을 수 있을까요?</p>
                     <button class="btn btn-secondary" data-tool="dating-chat">실행하기</button>
                 </div>
                 <!-- New tools can be added here -->
@@ -79,7 +79,7 @@
     <div id="lotto-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>AI 로또 번호 생성기</h2>
+            <h2>로또 번호 생성기</h2>
             <div class="lotto-numbers"></div>
             <button id="draw-button" class="btn">Draw Numbers</button>
         </div>
@@ -88,7 +88,7 @@
     <div id="face-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>AI 얼굴상 분석</h2>
+            <h2>얼굴상 분석</h2>
             <input type="file" id="image-upload" accept="image/*">
             <div id="image-display-container">
                 <img id="uploaded-image" src="#" alt="선택된 이미지" style="display: none;">
@@ -102,8 +102,38 @@
     <div id="dating-chat-modal" class="modal">
         <div class="modal-content dating-chat-content">
             <span class="close-button">&times;</span>
-            <h2>AI 소개팅 대화 시뮬레이터</h2>
-            <div class="chat-window">
+            <h2>소개팅 대화 시뮬레이터</h2>
+            <div id="dating-setup-screen" class="dating-setup-screen">
+                <h3>당신의 이상형은?</h3>
+                <div class="input-group">
+                    <label>성별:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="gender-male" name="user-gender" value="male" checked>
+                        <label for="gender-male">남성</label>
+                        <input type="radio" id="gender-female" name="user-gender" value="female">
+                        <label for="gender-female">여성</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="user-age">나이:</label>
+                    <input type="number" id="user-age" min="18" max="99" value="25">
+                </div>
+                <div class="input-group">
+                    <label>선호하는 대화 스타일:</label>
+                    <div class="radio-group personality-selection">
+                        <input type="radio" id="personality-tsundere" name="ai-personality" value="tsundere" checked>
+                        <label for="personality-tsundere">까칠하지만 속정 깊은 (츤데레)</label>
+                        <input type="radio" id="personality-cute" name="ai-personality" value="cute">
+                        <label for="personality-cute">애교 많고 귀여운</label>
+                        <input type="radio" id="personality-cool" name="ai-personality" value="cool">
+                        <label for="personality-cool">시크하고 도도한</label>
+                        <input type="radio" id="personality-friendly" name="ai-personality" value="friendly">
+                        <label for="personality-friendly">친절하고 다정한</label>
+                    </div>
+                </div>
+                <button id="start-dating-chat-button" class="btn btn-primary">대화 시작</button>
+            </div>
+            <div class="chat-window" style="display: none;">
                 <div class="chat-messages">
                     <!-- Messages will be appended here -->
                 </div>

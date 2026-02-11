@@ -18,8 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 resetFaceClassifierUI();
             } else if (modalId === 'dating-chat-modal') {
-                resetDatingChatUI();
-                startDatingChat();
+                resetDatingChatUI(); // Reset UI on open
+                datingSetupScreen.style.display = 'flex'; // Show setup screen
+                chatWindow.style.display = 'none'; // Hide chat window
             }
         }
     };
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function initFaceClassifierModel() {
         if (isFaceModelLoaded) return;
-        labelContainer.innerHTML = '<div>AI 모델을 로딩 중입니다...</div>';
+        labelContainer.innerHTML = '<div>모델을 로딩 중입니다...</div>';
         faceLoadingSpinner.style.display = 'block'; // Show spinner
         try {
             const modelURL = TM_URL + "model.json";
@@ -207,30 +208,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Dating Chat Simulator Logic ---
     const datingChatModal = document.getElementById('dating-chat-modal');
+    const datingSetupScreen = datingChatModal.querySelector('#dating-setup-screen');
+    const chatWindow = datingChatModal.querySelector('.chat-window');
     const chatMessagesContainer = datingChatModal.querySelector('.chat-messages');
     const userMessageInput = datingChatModal.querySelector('#user-message-input');
     const sendMessageButton = datingChatModal.querySelector('#send-message-button');
-    let aiPersona = {
-        name: "테스트 공방 데이트 AI",
-        initialMessage: "안녕하세요, 테스트 공방의 데이트 AI입니다! 만나서 반가워요. 저와 즐거운 대화를 나눠볼까요? 😊",
-        responses: [
-            { keywords: ["안녕", "반가워"], response: "네, 안녕하세요! 만나서 저도 반가워요. 😄 어떤 이야기를 좋아하세요?" },
-            { keywords: ["뭐해", "뭐해요"], response: "지금 당신과 대화하고 있어요! 😊 저와 대화하는 건 어떠세요?" },
-            { keywords: ["취미", "좋아"], response: "저는 새로운 지식을 배우고, 재미있는 대화를 나누는 걸 좋아해요. 당신의 취미는 무엇인가요?" },
-            { keywords: ["날씨", "오늘"], response: "오늘은 당신과 대화하기 딱 좋은 날씨네요! 어떤 하루를 보내셨나요?" },
-            { keywords: ["좋아해", "사랑해"], response: "어머, 그렇게 말씀해주시니 기분이 좋네요! 하지만 저는 AI라서 감정은 느끼지 못한답니다. 그래도 당신의 따뜻한 마음에 감사해요. ❤️" },
-            { keywords: ["바보", "재미없어"], response: "음, 제가 재미없다고 느끼셨다니 아쉽네요. 어떤 이야기가 더 즐거울까요? 제가 더 노력할게요! 😅" },
-            { keywords: ["질문"], response: "네, 궁금한 게 있으시면 무엇이든 물어보세요! 아는 범위 내에서 최선을 다해 답변해 드릴게요. ✨" },
-            { keywords: ["고마워", "감사"], response: "별말씀을요! 당신과 대화해서 저도 즐거워요. 😉" },
-            { keywords: ["이름"], response: "저는 테스트 공방의 데이트 AI라고 불러주시면 돼요! 당신의 이름은 무엇인가요?" },
-            { keywords: ["끝", "그만", "헤어져"], response: "벌써 대화가 끝나다니 아쉽네요. 다음에 또 만나서 이야기해요! 👋" },
-            { keywords: ["어때", "생각", "생각해"], response: "저는 데이터와 로직으로 사고하지만, 당신의 이야기에 깊이 공감하려고 노력해요. 당신의 생각은 어떠세요?" },
-            { keywords: ["잘생", "이뻐", "멋져"], response: "칭찬해주셔서 감사합니다! 제가 더 멋진 대화를 나눌 수 있도록 노력할게요. ☺️" }
-        ],
-        fallbackResponse: "흥미로운 이야기네요! 좀 더 자세히 말해주실 수 있나요? 아니면 다른 주제로 넘어가 볼까요? 😊"
-    };
-    let messageIdCounter = 0; // To ensure unique keys if needed for more complex scenarios
+    const startDatingChatButton = datingChatModal.querySelector('#start-dating-chat-button');
+    const userGenderRadios = datingChatModal.querySelectorAll('input[name="user-gender"]');
+    const userAgeInput = datingChatModal.querySelector('#user-age');
+    const aiPersonalityRadios = datingChatModal.querySelectorAll('input[name="ai-personality"]');
 
+    let aiPersona = {}; // This will be populated based on user selection
+
+    const allAiPersonalities = {
+        tsundere: {
+            name: "까칠한 그",
+            initialMessage: "흐음, 뭐, 어서 와. 별다른 용건은 없겠지? 흥.",
+            responses: [
+                { keywords: ["안녕", "반가워"], response: "그래, 별일 없으면 나중에 다시 와." },
+                { keywords: ["뭐해", "뭐해요"], response: "보는 대로, 넌 안 바쁜가 보네." },
+                { keywords: ["좋아해", "사랑해"], response: "갑자기 무슨 소리야. 착각하지 마." },
+                { keywords: ["바보", "재미없어"], response: "건방지긴. 네가 뭘 안다고." },
+                { keywords: ["칭찬", "멋져"], response: "흥, 딱히 네 칭찬을 바란 건 아니야." }
+            ],
+            fallbackResponse: "그래서, 하고 싶은 말이 뭔데? 시간 낭비는 질색이야."
+        },
+        cute: {
+            name: "귀여운 그녀",
+            initialMessage: "안녕! (*ฅ́˘ฅ̀*)♡ 만나서 반가워! 나랑 같이 놀아줄 거지?",
+            responses: [
+                { keywords: ["안녕", "반가워"], response: "응! 안녕! 반가워요! 저랑 놀아요! (๑˃̵ᴗ˂̵)و" },
+                { keywords: ["뭐해", "뭐해요"], response: "음~ 지금은 당신이랑 얘기하고 있어요! 저랑 얘기하는 거 좋아요? (⁎⁍̴̛ᴗ⁍̴̛⁎)" },
+                { keywords: ["좋아해", "사랑해"], response: "어머랏! (⸝⸝･ᴗ･⸝⸝) 너무 갑작스럽지만... 기분은 좋네요! 히힛." },
+                { keywords: ["바보", "재미없어"], response: "에이잉... 제가 더 노력할게요! 어떤 게 재미있을까요? (•́_•̀)" },
+                { keywords: ["칭찬", "멋져"], response: "정말요? 감사합니다! 헤헤 (´▽`ʃ♡ƪ)" }
+            ],
+            fallbackResponse: "음냐링... 무슨 말인지 잘 모르겠어요! 🥺 다시 말해줄 수 있어요?"
+        },
+        cool: {
+            name: "시크한 그",
+            initialMessage: "왔는가. 별 볼일 없으면 이만.",
+            responses: [
+                { keywords: ["안녕", "반가워"], response: "왔나. 용건은." },
+                { keywords: ["뭐해", "뭐해요"], response: "생각 중이다." },
+                { keywords: ["좋아해", "사랑해"], response: "감정적인 발언은 자제해라." },
+                { keywords: ["바보", "재미없어"], response: "판단은 자유다. 난 흔들리지 않는다." },
+                { keywords: ["칭찬", "멋져"], response: "…" }
+            ],
+            fallbackResponse: "흥미로운가. 계속."
+        },
+        friendly: {
+            name: "다정한 그녀",
+            initialMessage: "안녕하세요! 만나서 정말 반가워요. 편하게 이야기 나눠요. 😊",
+            responses: [
+                { keywords: ["안녕", "반가워"], response: "네, 안녕하세요! 저도 만나서 반가워요. 좋은 하루 보내셨나요?" },
+                { keywords: ["뭐해", "뭐해요"], response: "지금은 당신과 즐거운 대화를 나누고 있어요. 혹시 특별한 일 있으셨나요?" },
+                { keywords: ["좋아해", "사랑해"], response: "어머, 그렇게 말씀해주시니 정말 감사해요! 저는 당신의 친구 같은 존재가 되고 싶어요. 💖" },
+                { keywords: ["바보", "재미없어"], response: "제가 혹시 실수를 했나요? 죄송해요. 어떤 이야기를 더 들려드릴까요? 제가 더 노력할게요!" },
+                { keywords: ["칭찬", "멋져"], response: "칭찬해주셔서 기뻐요! 당신도 정말 멋진 분 같아요. 👍" }
+            ],
+            fallbackResponse: "음, 더 깊은 이야기를 나눠보고 싶네요. 혹시 다른 궁금한 점은 없으신가요? 저는 언제든 당신의 이야기를 들을 준비가 되어 있어요."
+        }
+    };
+    
     function displayMessage(sender, text, type) {
         const messageWrapper = document.createElement('div');
         messageWrapper.classList.add('message');
@@ -248,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageWrapper.appendChild(timestamp);
             messageWrapper.appendChild(messageContent);
         } else { // ai-message
-            // AI avatar/name could go here
             messageWrapper.appendChild(messageContent);
             messageWrapper.appendChild(timestamp);
         }
@@ -257,22 +296,26 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
     }
 
+    let typingIndicatorElement = null; // Store reference to typing indicator
+
     function showTypingIndicator() {
-        const indicator = document.createElement('div');
-        indicator.classList.add('typing-indicator', 'ai-message');
-        indicator.innerHTML = `
-            <div class="message-content">
-                <span></span><span></span><span></span>
-            </div>
-        `;
-        chatMessagesContainer.appendChild(indicator);
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+        if (!typingIndicatorElement) {
+            typingIndicatorElement = document.createElement('div');
+            typingIndicatorElement.classList.add('typing-indicator', 'ai-message');
+            typingIndicatorElement.innerHTML = `
+                <div class="message-content">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            chatMessagesContainer.appendChild(typingIndicatorElement);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
     }
 
     function hideTypingIndicator() {
-        const indicator = chatMessagesContainer.querySelector('.typing-indicator');
-        if (indicator) {
-            indicator.remove();
+        if (typingIndicatorElement) {
+            typingIndicatorElement.remove();
+            typingIndicatorElement = null;
         }
     }
 
@@ -319,18 +362,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function resetDatingChatUI() {
+        datingSetupScreen.style.display = 'flex'; // Show setup screen
+        chatWindow.style.display = 'none'; // Hide chat window
         chatMessagesContainer.innerHTML = '';
         userMessageInput.value = '';
         userMessageInput.disabled = false;
         sendMessageButton.disabled = false;
         hideTypingIndicator();
+        // Reset setup screen inputs
+        datingChatModal.querySelector('#gender-male').checked = true;
+        userAgeInput.value = '25';
+        datingChatModal.querySelector('#personality-tsundere').checked = true;
     }
 
-    function startDatingChat() {
+    startDatingChatButton.addEventListener('click', () => {
+        const selectedGender = datingChatModal.querySelector('input[name="user-gender"]:checked').value;
+        const userAge = parseInt(userAgeInput.value);
+        const selectedPersonality = datingChatModal.querySelector('input[name="ai-personality"]:checked').value;
+
+        if (isNaN(userAge) || userAge < 18 || userAge > 99) {
+            alert("나이는 18세에서 99세 사이로 입력해주세요.");
+            return;
+        }
+
+        aiPersona = allAiPersonalities[selectedPersonality];
+        
+        // Hide setup and show chat
+        datingSetupScreen.style.display = 'none';
+        chatWindow.style.display = 'flex';
+        
         setTimeout(() => {
             displayMessage(aiPersona.name, aiPersona.initialMessage, "ai-message");
+            userMessageInput.focus();
         }, 500); // Small delay for initial message
-    }
+    });
 
 
     // --- Smooth Scrolling ---

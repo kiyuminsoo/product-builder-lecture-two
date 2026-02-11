@@ -442,6 +442,90 @@ img {
     z-index: 10;
 }
 
+/* Dating Setup Screen */
+.dating-setup-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    gap: 1.5rem;
+}
+
+.dating-setup-screen h3 {
+    font-size: 1.8rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.dating-setup-screen .input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+}
+
+.dating-setup-screen label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    text-align: left;
+    width: 100%;
+}
+
+.dating-setup-screen input[type="number"] {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    text-align: center;
+}
+
+.dating-setup-screen .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.dating-setup-screen .radio-group input[type="radio"] {
+    display: none; /* Hide native radio button */
+}
+
+.dating-setup-screen .radio-group label {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 0.8rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    text-align: center;
+    flex: 1 1 auto; /* Allow items to grow/shrink */
+    min-width: 120px; /* Minimum width for buttons */
+}
+
+.dating-setup-screen .radio-group input[type="radio"]:checked + label {
+    background-color: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+    box-shadow: 0 2px 8px rgba(0, 163, 255, 0.3);
+}
+
+.dating-setup-screen .radio-group label:hover {
+    background-color: #3a3a3a;
+    color: var(--text-primary);
+}
+
+
 .chat-window {
     flex: 1;
     display: flex;
@@ -605,3 +689,4 @@ img {
     background-color: var(--accent-primary);
     color: white;
 }
+
