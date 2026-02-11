@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테스트 공방 - 당신의 아이디어를 현실로</title>
+    <meta name="description" content="테스트 공방에서 기발하고 재미있는 아이디어를 AI 기술로 구현합니다. 로또 예측, 얼굴상 분석, 가상 대화 시뮬레이터 등 다양한 실험을 경험하세요.">
+    <meta name="google-adsense-account" content="ca-pub-3309850697417776">
+    <link rel="stylesheet" href="style.css">
+    
+<!-- Premium Wavy Filter (no text-splitting, keeps spacing intact) -->
+<svg width="0" height="0" style="position:absolute">
+    <filter id="wavy">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="2" result="noise">
+        <animate attributeName="baseFrequency" dur="1.2s" values="0.012;0.018;0.012" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+  
+  <script>
+    // Mouse-follow glow (subtle, premium)
+    (function () {
+      const root = document.documentElement;
+      let raf = 0;
+  
+      window.addEventListener("mousemove", (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          const x = (e.clientX / window.innerWidth) * 100;
+          const y = (e.clientY / window.innerHeight) * 100;
+          root.style.setProperty("--mx", x + "%");
+          root.style.setProperty("--my", y + "%");
+          raf = 0;
+        });
+      }, { passive: true });
+    })();
+  </script>
+
+<!-- Premium minimal motion (Apple-like: subtle, clean) -->
+<script data-premium-motion>
+(function(){
+  const root = document.documentElement;
+
+  // 1) mouse-follow glow (subtle)
+  let raf = 0;
+  window.addEventListener("mousemove", (e) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      root.style.setProperty("--mx", x + "%");
+      root.style.setProperty("--my", y + "%");
+      raf = 0;
+    });
+  }, { passive: true });
+
+  // 2) scroll reveal
+  const els = document.querySelectorAll(".reveal");
+  if (!els.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    for (const ent of entries){
+      if (ent.isIntersecting){
+        ent.target.classList.add("is-in");
+        io.unobserve(ent.target);
+      }
+    }
+  }, { threshold: 0.2 });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
