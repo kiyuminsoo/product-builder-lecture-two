@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소개팅 시뮬레이터</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dating-sim.css">
+</head>
+<body>
+    <header>
+        <h1>소개팅 시뮬레이터</h1>
+    </header>
+
+    <main class="simulator-container">
+        <div id="intro-modal" class="modal">
+            <div class="modal-content">
+                <h2>이용 안내</h2>
+                <p>본 시뮬레이터는 재미를 위한 것이며, 개인차가 있을 수 있습니다.</p>
+                <p>어떠한 개인 데이터도 저장되지 않습니다.</p>
+                <button id="close-modal">시작하기</button>
+            </div>
+        </div>
+
+        <div id="simulator-area" style="display: none;">
+            <div class="progress-container">
+                <span id="current-question-number"></span>/<span id="total-questions"></span>
+                <div class="progress-bar-outline"><div id="progress-bar"></div></div>
+            </div>
+
+            <div id="question-card" class="card">
+                <p id="question-text"></p>
+                <div id="reaction-text" class="reaction-text"></div>
+                <div id="choices-container" class="choices-container"></div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button id="back-button" class="nav-button" style="display: none;">뒤로가기</button>
+            </div>
+        </div>
+
+        <div id="result-area" class="card" style="display: none;">
+            <h2 id="result-type"></h2>
+            <p id="result-summary"></p>
+            <h3>🌟 나의 매력 포인트</h3>
+            <ul id="result-pros"></ul>
+            <h3>⚠️ 주의할 점</h3>
+            <p id="result-cons"></p>
+            <h3>💬 추천 대화 시작 멘트</h3>
+            <ul id="result-opening-lines"></ul>
+            <h3>💖 다음 데이트 코스 추천</h3>
+            <ul id="result-date-courses"></ul>
+            <div class="result-actions">
+                <button id="share-button" class="action-button">결과 공유하기</button>
+                <button id="restart-button" class="action-button">다시하기</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="dating-sim.js"></script>
+</body>
+</html>
