@@ -11,10 +11,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     min-height: calc(100vh - 80px); /* Adjust based on header height */
     padding: 20px;
     box-sizing: border-box;
+    max-width: 720px; /* Constrain entire simulator width */
+    margin: 0 auto; /* Center the entire simulator */
+    gap: 16px; /* Spacing between main sections */
 }
 
 /* Mandatory font bug fix styles */
@@ -47,7 +49,7 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Remove bottom margin to let gap handle spacing */
     width: 100%;
     max-width: 720px; /* Adjusted from 500px to 720px as per user request */
     text-align: center;
@@ -94,7 +96,7 @@ body {
 .progress-container {
     width: 100%;
     max-width: 720px; /* Align max-width with the card */
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Remove bottom margin to let gap handle spacing */
     text-align: center;
     font-size: 1.1em;
     color: #555;
@@ -169,7 +171,7 @@ body {
     gap: 10px;
     width: 100%;
     max-width: 720px; /* Aligned max-width with card */
-    margin-top: 20px; /* Added some spacing */
+    margin-top: 0; /* Let gap handle spacing */
 }
 
 #back-button {
