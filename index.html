@@ -106,6 +106,15 @@
             <div id="dating-setup-screen" class="dating-setup-screen">
                 <h3>당신의 이상형은?</h3>
                 <div class="input-group">
+                    <label>성별:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="user-gender-male" name="user-gender" value="male" checked>
+                        <label for="user-gender-male">남성</label>
+                        <input type="radio" id="user-gender-female" name="user-gender" value="female">
+                        <label for="user-gender-female">여성</label>
+                    </div>
+                </div>
+                <div class="input-group">
                     <label for="user-age">나이:</label>
                     <input type="number" id="user-age" min="18" max="99" value="25">
                 </div>
@@ -120,6 +129,12 @@
                         <label for="personality-cool">시크하고 도도한</label>
                         <input type="radio" id="personality-friendly" name="ai-personality" value="friendly">
                         <label for="personality-friendly">친절하고 다정한</label>
+                        <input type="radio" id="personality-quirky" name="ai-personality" value="quirky">
+                        <label for="personality-quirky">엉뚱발랄한</label>
+                        <input type="radio" id="personality-serious" name="ai-personality" value="serious">
+                        <label for="personality-serious">진지하고 사려 깊은</label>
+                        <input type="radio" id="personality-humorous" name="ai-personality" value="humorous">
+                        <label for="personality-humorous">유머러스하고 재치 있는</label>
                     </div>
                 </div>
                 <button id="start-dating-chat-button" class="btn btn-primary">대화 시작</button>
