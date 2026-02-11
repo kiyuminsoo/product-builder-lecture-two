@@ -921,4 +921,87 @@ img {
     animation: none !important;
   }
 }
+/* ===== Premium Hero Fix + Motion ===== */
 
+/* 1) 버튼이 텍스트 옆으로 붙지 않게: 히어로 영역 정렬 고정 */
+.hero, .hero-section, .home-hero {
+    text-align: center;
+  }
+  
+  .hero-title{
+    max-width: 1100px;
+    margin: 0 auto 16px;
+    line-height: 1.12;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  
+  .hero-desc{
+    max-width: 860px;
+    margin: 0 auto 22px;
+    line-height: 1.75;
+    opacity: .9;
+    word-break: keep-all;
+  }
+  
+  /* CTA는 항상 아래로 */
+  .hero-cta{
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+  }
+  
+  .cta-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 800;
+    border: 1px solid rgba(255,255,255,.10);
+    background: linear-gradient(135deg, #1ea1ff, #00d4a6);
+    color: #061a16;
+    transform: translateY(0);
+    transition: transform .18s ease, filter .18s ease;
+  }
+  .cta-btn:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+  
+  /* 2) “고급 물결”: hover 시 SVG filter로 왜곡 (띄어쓰기 절대 안 깨짐) */
+  .fx-wavy{
+    display: inline-block;
+  }
+  .fx-wavy:hover{
+    filter: url(#wavy);
+  }
+  
+  /* 3) 쉬머(고급 광택) — 타이틀만 살짝 */
+  .fx-shimmer{
+    background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(255,255,255,.92), rgba(0,212,166,.95), rgba(255,255,255,.92));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 220% 100%;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+  }
+  
+  /* 4) 마우스 따라오는 은은한 글로우 (사이트 전체 생동감) */
+  body{
+    background:
+      radial-gradient(600px 280px at var(--mx, 50%) var(--my, 30%), rgba(0,212,166,.10), transparent 60%),
+      radial-gradient(700px 320px at calc(var(--mx, 50%) + 10%) calc(var(--my, 30%) + 10%), rgba(30,161,255,.10), transparent 62%);
+  }
+  
+  /* 5) 모션 최소화 설정 대응 */
+  @media (prefers-reduced-motion: reduce){
+    .fx-wavy:hover{ filter: none !important; }
+    .fx-shimmer{ animation: none !important; }
+  }

@@ -33,12 +33,19 @@
 
 <section class="hero">
             <div class="hero-content">
-                <h1 ><span class="wave-text">테스트 공방: 아이디어를 현실로, 재미를 경험하다</span></h1>
-                <p ><span class="wave-paragraph">테스트 공방은 일상 속 궁금증을 ‘짧고 재밌게’ 풀어주는 인터랙티브 도구들을 모은 공간입니다.
-소개팅 시뮬레이터부터 성향·재미 테스트까지, 클릭 몇 번으로 결과를 확인하고 공유할 수 있어요.
-새 도구는 꾸준히 추가되며, 사용자 피드백을 바탕으로 더 빠르고 편하게 개선됩니다.</span></p>
-                <a href="#tools" class="btn btn-primary">도구 둘러보기</a>
-            </div>
+                <h1 class="hero-title fx-wavy fx-shimmer">
+                    테스트 공방: 아이디어를 현실로, 재미를 경험하다
+                  </h1>
+                  
+                  <p class="hero-desc fx-wavy">
+                    테스트 공방은 일상 속 궁금증을 ‘짧고 재밌게’ 풀어주는 인터랙티브 도구들을 모은 공간입니다.<br>
+                    소개팅 시뮬레이터부터 성향·재미 테스트까지, 클릭 몇 번으로 결과를 확인하고 공유할 수 있어요.<br>
+                    새 도구는 꾸준히 추가되며, 사용자 피드백을 바탕으로 더 빠르고 편하게 개선됩니다.
+                  </p>
+                  
+                  <div class="hero-cta">
+                    <a class="cta-btn" href="#tools">도구 둘러보기</a>
+                  </div>
         </section>
 
         <section id="tools" class="tools-section">
@@ -144,6 +151,33 @@
   });
 })();
 </script>
-
+<!-- Premium Wavy Filter (no text-splitting, keeps spacing intact) -->
+<svg width="0" height="0" style="position:absolute">
+    <filter id="wavy">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="2" result="noise">
+        <animate attributeName="baseFrequency" dur="1.2s" values="0.012;0.018;0.012" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+  
+  <script>
+    // Mouse-follow glow (subtle, premium)
+    (function () {
+      const root = document.documentElement;
+      let raf = 0;
+  
+      window.addEventListener("mousemove", (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          const x = (e.clientX / window.innerWidth) * 100;
+          const y = (e.clientY / window.innerHeight) * 100;
+          root.style.setProperty("--mx", x + "%");
+          root.style.setProperty("--my", y + "%");
+          raf = 0;
+        });
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
