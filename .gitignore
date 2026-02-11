@@ -1,0 +1,7 @@
+# Logs
+*.log
+# Firebase debug log
+firebase-debug.log
+
+# Directories
+product-builder-lecture/
