@@ -336,8 +336,27 @@ img {
     height: 100%;
     background-color: var(--accent-secondary);
     width: 0; /* Animated by JS */
-    transition: width 0.8s ease-out;
+    transform: scaleX(0); /* Initial state for animation */
+    transform-origin: left; /* Scale from left */
+    transition: width 0.8s ease-out, transform 0.8s ease-out;
     border-radius: 4px;
+    animation: barFill 0.8s ease-out forwards; /* New animation for fill */
+}
+
+@keyframes barFill {
+    0% { width: 0; transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* --- Dating Chat Simulator Styles --- */

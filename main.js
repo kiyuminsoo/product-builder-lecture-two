@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initFaceClassifierModel() {
         if (isFaceModelLoaded) return;
         labelContainer.innerHTML = '<div>모델을 로딩 중입니다...</div>';
+        labelContainer.style.display = 'block'; // Ensure labelContainer is visible
         faceLoadingSpinner.style.display = 'block'; // Show spinner
         try {
             const modelURL = TM_URL + "model.json";
@@ -138,7 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = (e) => {
                 uploadedImageElement.src = e.target.result;
                 uploadedImageElement.style.display = 'block';
+                labelContainer.style.display = 'none'; // Hide labelContainer until classification
                 labelContainer.innerHTML = '';
+        labelContainer.style.display = 'none'; // Hide labelContainer
                 classifyImageButton.style.display = 'inline-block';
             };
             reader.readAsDataURL(file);
@@ -146,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadedImageElement.src = '#';
             uploadedImageElement.style.display = 'none';
             labelContainer.innerHTML = '';
+            labelContainer.style.display = 'none'; // Hide labelContainer
             classifyImageButton.style.display = 'none';
         }
     });
@@ -153,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     classifyImageButton.addEventListener('click', async () => {
         if (!isFaceModelLoaded) {
             labelContainer.innerHTML = '<div>모델이 아직 로딩되지 않았습니다.</div>';
+            labelContainer.style.display = 'block'; // Show message
             return;
         }
         if (uploadedImageElement.src && uploadedImageElement.src !== '#') {
@@ -160,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             classifyImageButton.textContent = '분석 중...';
             faceLoadingSpinner.style.display = 'block'; // Show spinner
             labelContainer.innerHTML = ''; // Clear previous results
+            labelContainer.style.display = 'block'; // Ensure labelContainer is visible for results
 
             try {
                 const prediction = await faceModel.predict(uploadedImageElement);
@@ -192,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             labelContainer.innerHTML = '<div>분석할 이미지를 먼저 업로드해주세요.</div>';
+            labelContainer.style.display = 'block'; // Show message
         }
     });
 
@@ -223,6 +230,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let aiPersona = {}; // This will be populated based on user selection
     let currentDatingSetupStep = 1;
     const totalDatingSetupSteps = 3; // Total number of steps in setup
+
+    const datingSetupSteps = datingChatModal.querySelectorAll('.setup-step');
+    const datingNavButtons = datingChatModal.querySelectorAll('.step-navigation button');
+
+    function showDatingSetupStep(stepNumber) {
+        datingSetupSteps.forEach((step, index) => {
+            step.style.display = (index + 1 === stepNumber) ? 'flex' : 'none';
+        });
+        currentDatingSetupStep = stepNumber;
+    }
+
+    datingNavButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const nav = button.getAttribute('data-nav');
+            if (nav === 'next') {
+                if (currentDatingSetupStep < totalDatingSetupSteps) {
+                    showDatingSetupStep(currentDatingSetupStep + 1);
+                }
+            } else if (nav === 'prev') {
+                if (currentDatingSetupStep > 1) {
+                    showDatingSetupStep(currentDatingSetupStep - 1);
+                }
+            }
+        });
+    });
+
+
 
     // Define all AI personalities by gender and type
     const allAiPersonalities = {
@@ -542,7 +576,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset setup screen inputs
         datingChatModal.querySelector('#user-gender-male').checked = true; // Reset user gender
         userAgeInput.value = '25';
-        datingChatModal.querySelector('#personality-tsundere').checked = true;
+        // Reset user personality radio buttons to default 'friendly'
+        datingChatModal.querySelector('input[name="user-personality"][value="friendly"]').checked = true;
+        // Reset AI personality radio buttons to default 'friendly'
+        datingChatModal.querySelector('input[name="ai-personality"][value="friendly"]').checked = true;
     }
 
     startDatingChatButton.addEventListener('click', () => {
