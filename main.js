@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetDatingChatUI(); // Reset UI on open
                 datingSetupScreen.style.display = 'flex'; // Show setup screen
                 chatWindow.style.display = 'none'; // Hide chat window
+                showDatingSetupStep(1); // Show first step
             }
         }
     };
@@ -214,11 +215,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const userMessageInput = datingChatModal.querySelector('#user-message-input');
     const sendMessageButton = datingChatModal.querySelector('#send-message-button');
     const startDatingChatButton = datingChatModal.querySelector('#start-dating-chat-button');
-    const userGenderRadios = datingChatModal.querySelectorAll('input[name="user-gender"]'); // Re-added reference
+    const userGenderRadios = datingChatModal.querySelectorAll('input[name="user-gender"]');
     const userAgeInput = datingChatModal.querySelector('#user-age');
+    const userPersonalityRadios = datingChatModal.querySelectorAll('input[name="user-personality"]'); // New ref
     const aiPersonalityRadios = datingChatModal.querySelectorAll('input[name="ai-personality"]');
 
     let aiPersona = {}; // This will be populated based on user selection
+    let currentDatingSetupStep = 1;
+    const totalDatingSetupSteps = 3; // Total number of steps in setup
 
     // Define all AI personalities by gender and type
     const allAiPersonalities = {

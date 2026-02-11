@@ -104,40 +104,75 @@
             <span class="close-button">&times;</span>
             <h2>소개팅 대화 시뮬레이터</h2>
             <div id="dating-setup-screen" class="dating-setup-screen">
-                <h3>당신의 이상형은?</h3>
-                <div class="input-group">
-                    <label>성별:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="user-gender-male" name="user-gender" value="male" checked>
-                        <label for="user-gender-male">남성</label>
-                        <input type="radio" id="user-gender-female" name="user-gender" value="female">
-                        <label for="user-gender-female">여성</label>
+                <div id="setup-steps-container">
+                    <div class="setup-step" id="step-1">
+                        <h3>당신은 누구인가요?</h3>
+                        <div class="input-group">
+                            <label>당신의 성별은:</label>
+                            <div class="radio-group">
+                                <input type="radio" id="user-gender-male" name="user-gender" value="male" checked>
+                                <label for="user-gender-male">남성</label>
+                                <input type="radio" id="user-gender-female" name="user-gender" value="female">
+                                <label for="user-gender-female">여성</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="user-age">당신의 나이는:</label>
+                            <input type="number" id="user-age" min="18" max="99" value="25">
+                        </div>
+                        <div class="step-navigation">
+                            <button class="btn btn-primary" data-nav="next">다음</button>
+                        </div>
+                    </div>
+                    <div class="setup-step" id="step-2" style="display:none;">
+                        <h3>당신의 성격은 어떤가요?</h3>
+                        <p class="step-description">소개팅 상대에게 보여줄 당신의 매력을 선택해주세요.</p>
+                        <div class="radio-group personality-selection">
+                            <input type="radio" id="user-personality-friendly" name="user-personality" value="friendly" checked>
+                            <label for="user-personality-friendly">친절하고 다정한</label>
+                            <input type="radio" id="user-personality-cute" name="user-personality" value="cute">
+                            <label for="user-personality-cute">애교 많고 귀여운</label>
+                            <input type="radio" id="user-personality-cool" name="user-personality" value="cool">
+                            <label for="user-personality-cool">시크하고 도도한</label>
+                            <input type="radio" id="user-personality-tsundere" name="user-personality" value="tsundere">
+                            <label for="user-personality-tsundere">까칠하지만 속정 깊은</label>
+                            <input type="radio" id="user-personality-quirky" name="user-personality" value="quirky">
+                            <label for="user-personality-quirky">엉뚱발랄한</label>
+                            <input type="radio" id="user-personality-serious" name="user-personality" value="serious">
+                            <label for="user-personality-serious">진지하고 사려 깊은</label>
+                            <input type="radio" id="user-personality-humorous" name="user-personality" value="humorous">
+                            <label for="user-personality-humorous">유머러스하고 재치 있는</label>
+                        </div>
+                        <div class="step-navigation">
+                            <button class="btn btn-secondary" data-nav="prev">이전</button>
+                            <button class="btn btn-primary" data-nav="next">다음</button>
+                        </div>
+                    </div>
+                    <div class="setup-step" id="step-3" style="display:none;">
+                        <h3>상대의 이상형은?</h3>
+                        <p class="step-description">어떤 스타일의 상대와 대화하고 싶으신가요?</p>
+                        <div class="radio-group personality-selection">
+                            <input type="radio" id="ai-personality-friendly" name="ai-personality" value="friendly" checked>
+                            <label for="ai-personality-friendly">친절하고 다정한</label>
+                            <input type="radio" id="ai-personality-cute" name="ai-personality" value="cute">
+                            <label for="ai-personality-cute">애교 많고 귀여운</label>
+                            <input type="radio" id="ai-personality-cool" name="ai-personality" value="cool">
+                            <label for="ai-personality-cool">시크하고 도도한</label>
+                            <input type="radio" id="ai-personality-tsundere" name="ai-personality" value="tsundere">
+                            <label for="ai-personality-tsundere">까칠하지만 속정 깊은 (츤데레)</label>
+                            <input type="radio" id="ai-personality-quirky" name="ai-personality" value="quirky">
+                            <label for="ai-personality-quirky">엉뚱발랄한</label>
+                            <input type="radio" id="ai-personality-serious" name="ai-personality" value="serious">
+                            <label for="ai-personality-serious">진지하고 사려 깊은</label>
+                            <input type="radio" id="ai-personality-humorous" name="ai-personality" value="humorous">
+                            <label for="ai-personality-humorous">유머러스하고 재치 있는</label>
+                        </div>
+                        <div class="step-navigation">
+                            <button class="btn btn-secondary" data-nav="prev">이전</button>
+                            <button id="start-dating-chat-button" class="btn btn-primary">대화 시작</button>
+                        </div>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label for="user-age">나이:</label>
-                    <input type="number" id="user-age" min="18" max="99" value="25">
-                </div>
-                <div class="input-group">
-                    <label>선호하는 대화 스타일:</label>
-                    <div class="radio-group personality-selection">
-                        <input type="radio" id="personality-tsundere" name="ai-personality" value="tsundere" checked>
-                        <label for="personality-tsundere">까칠하지만 속정 깊은 (츤데레)</label>
-                        <input type="radio" id="personality-cute" name="ai-personality" value="cute">
-                        <label for="personality-cute">애교 많고 귀여운</label>
-                        <input type="radio" id="personality-cool" name="ai-personality" value="cool">
-                        <label for="personality-cool">시크하고 도도한</label>
-                        <input type="radio" id="personality-friendly" name="ai-personality" value="friendly">
-                        <label for="personality-friendly">친절하고 다정한</label>
-                        <input type="radio" id="personality-quirky" name="ai-personality" value="quirky">
-                        <label for="personality-quirky">엉뚱발랄한</label>
-                        <input type="radio" id="personality-serious" name="ai-personality" value="serious">
-                        <label for="personality-serious">진지하고 사려 깊은</label>
-                        <input type="radio" id="personality-humorous" name="ai-personality" value="humorous">
-                        <label for="personality-humorous">유머러스하고 재치 있는</label>
-                    </div>
-                </div>
-                <button id="start-dating-chat-button" class="btn btn-primary">대화 시작</button>
             </div>
             <div class="chat-window" style="display: none;">
                 <div class="chat-messages">
