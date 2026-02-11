@@ -49,7 +49,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     width: 100%;
-    max-width: 500px;
+    max-width: 720px; /* Adjusted from 500px to 720px as per user request */
     text-align: center;
     box-sizing: border-box;
     transition: all 0.3s ease-in-out;
@@ -93,7 +93,7 @@ body {
 
 .progress-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 720px; /* Align max-width with the card */
     margin-bottom: 20px;
     text-align: center;
     font-size: 1.1em;
@@ -168,12 +168,16 @@ body {
     justify-content: center;
     gap: 10px;
     width: 100%;
-    max-width: 500px;
+    max-width: 720px; /* Aligned max-width with card */
+    margin-top: 20px; /* Added some spacing */
 }
 
 #back-button {
     background-color: #ccc;
     color: #333;
+    width: auto; /* Allow button to fit content */
+    max-width: fit-content;
+    padding: 10px 20px;
 }
 
 #back-button:hover {
