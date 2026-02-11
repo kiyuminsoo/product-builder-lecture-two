@@ -11,6 +11,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%; /* Ensure container takes full width of parent */
     min-height: calc(100vh - 80px); /* Adjust based on header height */
     padding: 20px;
     box-sizing: border-box;
@@ -49,7 +50,7 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 0; /* Remove bottom margin to let gap handle spacing */
+    margin-bottom: 0; /* Let parent gap handle spacing */
     width: 100%;
     max-width: 720px; /* Adjusted from 500px to 720px as per user request */
     text-align: center;
@@ -96,7 +97,7 @@ body {
 .progress-container {
     width: 100%;
     max-width: 720px; /* Align max-width with the card */
-    margin-bottom: 0; /* Remove bottom margin to let gap handle spacing */
+    margin-bottom: 0; /* Let parent gap handle spacing */
     text-align: center;
     font-size: 1.1em;
     color: #555;
@@ -119,9 +120,17 @@ body {
     transition: width 0.3s ease-in-out;
 }
 
+/* Quiz area container for strict 1-column stack */
+#simulator-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px; /* Consistent spacing between quiz elements */
+}
+
 #question-text {
     font-size: 1.4em;
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Let parent gap handle spacing */
     min-height: 80px; /* To prevent layout shift */
     display: flex;
     align-items: center;
@@ -132,8 +141,8 @@ body {
 .reaction-text {
     font-size: 1em;
     color: #777;
-    margin-top: -10px;
-    margin-bottom: 20px;
+    margin-top: 0; /* Let parent gap handle spacing */
+    margin-bottom: 0; /* Let parent gap handle spacing */
     min-height: 20px;
 }
 
@@ -171,7 +180,10 @@ body {
     gap: 10px;
     width: 100%;
     max-width: 720px; /* Aligned max-width with card */
-    margin-top: 0; /* Let gap handle spacing */
+    margin-top: 0; /* Let parent gap handle spacing */
+    background: none; /* Ensure no gray background for the panel */
+    padding: 0; /* Ensure no extra padding creates a 'panel' */
+    box-shadow: none; /* Ensure no shadow for the panel */
 }
 
 #back-button {
