@@ -1005,3 +1005,159 @@ img {
     .fx-wavy:hover{ filter: none !important; }
     .fx-shimmer{ animation: none !important; }
   }
+
+/* ===== Apple-like Dark Motion ===== */
+/* 목표: 다크 유지 + 애플스러운 미니멀 + 미세한 역동감(고급스럽게) */
+
+:root{
+  --bg: #0b0b0c;
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.62);
+  --line: rgba(255,255,255,.10);
+  --card: rgba(255,255,255,.06);
+  --card2: rgba(255,255,255,.08);
+  --shadow: 0 28px 80px rgba(0,0,0,.55);
+
+  --mx: 50%;
+  --my: 30%;
+  --scroll: 0;
+}
+
+/* background: 깊이감 있는 다크 + 포인터 글로우 + 스크롤에 따라 미세 이동 */
+body{
+  background:
+    radial-gradient(820px 420px at var(--mx) var(--my),
+      rgba(0,212,166,.11), transparent 62%),
+    radial-gradient(980px 560px at calc(var(--mx) + 10%) calc(var(--my) + 14%),
+      rgba(30,161,255,.09), transparent 62%),
+    radial-gradient(780px 520px at calc(20% + (var(--scroll) * 20%)) calc(10% + (var(--scroll) * 10%)),
+      rgba(255,255,255,.05), transparent 65%),
+    var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 얇고 고급스럽게: 헤더/라인 */
+header, .site-header{
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: rgba(11,11,12,.55);
+  backdrop-filter: blur(14px);
+}
+
+/* Hero: 타이포를 주인공으로, 과한 장식 없이도 존재감 */
+.hero{
+  position: relative;
+  isolation: isolate;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:-80px -40px auto;
+  height: 360px;
+  background:
+    radial-gradient(closest-side at 50% 40%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(closest-side at 70% 20%, rgba(0,212,166,.10), transparent 65%),
+    radial-gradient(closest-side at 30% 10%, rgba(30,161,255,.08), transparent 65%);
+  filter: blur(18px);
+  opacity: .9;
+  z-index: -1;
+  transform: translate3d(0, calc(var(--scroll) * 10px), 0);
+}
+
+/* 버튼은 유지하되, 애플스럽게: 미세한 깊이감 + hover lift + highlight */
+.btn, .cta-btn{
+  position: relative;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.92);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.btn-ghost{
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.78);
+}
+.btn::after, .cta-btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: inherit;
+  background:
+    radial-gradient(340px 180px at 50% 0%, rgba(255,255,255,.12), transparent 65%);
+  opacity: .0;
+  transition: opacity .22s ease;
+  pointer-events:none;
+}
+.btn:hover::after, .cta-btn:hover::after{ opacity: .9; }
+.btn:hover, .cta-btn:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  filter: brightness(1.05);
+}
+
+/* tools 카드: 글로우/틸트/라인 하이라이트로 “역동감” */
+#tools a, #tools .card, #tools li, #tools .tool{
+  position: relative;
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+  transform: translateZ(0);
+}
+#tools a::before, #tools .card::before, #tools li::before, #tools .tool::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: inherit;
+  background: radial-gradient(520px 280px at var(--hx, 50%) var(--hy, 10%),
+    rgba(255,255,255,.12), transparent 62%);
+  opacity: 0;
+  transition: opacity .22s ease;
+  pointer-events:none;
+}
+#tools a:hover::before, #tools .card:hover::before, #tools li:hover::before, #tools .tool:hover::before{
+  opacity: .9;
+}
+
+/* tilt card: JS가 --rx/--ry 설정 */
+.tilt-card{
+  transform-style: preserve-3d;
+  transition: transform .20s ease, background .20s ease, border-color .20s ease, filter .20s ease;
+}
+.tilt-card:hover{
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-2px);
+  border-color: rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.05));
+  filter: brightness(1.04);
+}
+
+/* reveal: 들어올 때만 살짝 */
+.reveal{
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(10px);
+  transition: opacity .75s cubic-bezier(.2,.9,.2,1),
+              transform .75s cubic-bezier(.2,.9,.2,1),
+              filter .75s ease;
+  will-change: opacity, transform, filter;
+}
+.reveal.is-in{
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* 텍스트: 더 애플스럽게(간격/두께는 유지) */
+.hero-title{
+  letter-spacing: -0.035em;
+}
+.eyebrow{
+  color: rgba(255,255,255,.55);
+}
+
+/* 모션 최소화 */
+@media (prefers-reduced-motion: reduce){
+  .reveal{ transition: none !important; transform:none !important; filter:none !important; opacity:1 !important; }
+  .tilt-card{ transition: none !important; transform:none !important; }
+  body{ background: var(--bg) !important; }
+}
