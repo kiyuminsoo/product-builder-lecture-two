@@ -1394,3 +1394,49 @@ nav a, nav button {
   appearance: none !important;
   font-family: inherit !important;
 }
+
+/* === TOOLS: BUTTON PERFECT UNIFY (FINAL) === */
+#tools .tools-grid{ align-items: stretch !important; }
+
+#tools .tool-card{
+  display:flex !important;
+  flex-direction:column !important;
+  min-height:340px !important;
+}
+
+/* 제목/본문 타이포 고정 (줄바꿈/길이 달라도 버튼 위치 영향 없음) */
+#tools .tool-card h3{
+  font-size:26px !important;
+  line-height:1.25 !important;
+  font-weight:800 !important;
+}
+#tools .tool-card p{
+  font-size:15px !important;
+  line-height:1.65 !important;
+  margin-bottom:18px !important;
+}
+
+/* 핵심: 버튼은 항상 '카드 바닥' + '카드 폭 100%' + '동일 높이/글자' */
+#tools .tool-card .tool-btn{
+  margin-top:auto !important;
+  width:100% !important;
+  height:48px !important;
+  padding:0 18px !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  font-size:14px !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+  text-align:center !important;
+
+  border-radius:14px !important;
+  box-sizing:border-box !important;
+}
+
+/* a/button 기본 스타일 차이 제거 */
+#tools .tool-card a.tool-btn{ text-decoration:none !important; }
+#tools .tool-card button.tool-btn{ -webkit-appearance:none !important; appearance:none !important; font-family:inherit !important; }
+
