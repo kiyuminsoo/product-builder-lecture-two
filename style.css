@@ -1,405 +1,347 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
 :root {
-    --bg-color: #f0f0f0;
-    --text-color: #333;
-    --container-bg-color: #ffffff;
-    --button-bg-color: #4CAF50;
-    --button-text-color: white;
-    --lotto-number-bg-color: #fff;
-    --lotto-number-border-color: #ccc;
-    --lotto-number-text-color: #333;
-    --container-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --button-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    --lotto-number-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --h1-text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    --bg-primary: #121212;
+    --bg-secondary: #1E1E1E;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #E0E0E0;
+    --text-secondary: #B0B0B0;
+    --accent-primary: #00A3FF;
+    --accent-secondary: #00E5A0;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --font-family-base: 'Noto Sans KR', 'Roboto', sans-serif;
 }
 
-body.dark-mode {
-    --bg-color: #212121;
-    --text-color: #e0e0e0;
-    --container-bg-color: #333333;
-    --button-bg-color: #66bb6a;
-    --button-text-color: white;
-    --lotto-number-bg-color: #424242;
-    --lotto-number-border-color: #616161;
-    --lotto-number-text-color: #e0e0e0;
-    --container-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    --button-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    --lotto-number-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --h1-text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-html, body {
-    height: 100%;
+/* Reset and Base Styles */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.5s ease, color 0.5s ease;
-    flex-direction: column; /* Allow content to stack vertically */
+    font-family: var(--font-family-base);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
 }
 
-.container {
-    text-align: center;
-    background-color: var(--container-bg-color);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: var(--container-shadow);
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-    position: relative;
-    z-index: 1;
+a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-h1 {
-    font-size: 2.8em;
-    margin-bottom: 30px;
-    color: var(--text-color);
-    text-shadow: var(--h1-text-shadow);
-    transition: color 0.5s ease, text-shadow 0.5s ease;
+a:hover {
+    color: var(--accent-secondary);
 }
 
-.lotto-numbers {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-.lotto-row {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 12px;
-}
-
-.lotto-number {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background-color: var(--lotto-number-bg-color);
-    border: 2px solid var(--lotto-number-border-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 26px;
-    margin: 0 6px;
-    font-weight: bold;
-    color: var(--lotto-number-text-color);
-    box-shadow: var(--lotto-number-shadow);
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.3s ease, transform 0.3s ease;
-    transform: scale(0); /* Initial state for pop-in animation */
-    opacity: 0;
-    animation: popIn 0.5s ease-out forwards; /* Applied via JS for staggered effect */
-}
-
-@keyframes popIn {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    80% {
-        transform: scale(1.1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-#draw-button,
-#theme-toggle {
-    padding: 12px 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    box-shadow: var(--button-shadow);
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-#draw-button:hover,
-#theme-toggle:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--button-shadow), 0 8px 15px rgba(0, 0, 0, 0.25);
-}
-
-#draw-button:active,
-#theme-toggle:active {
-    transform: translateY(0);
-    box-shadow: var(--button-shadow);
-}
-
-#theme-toggle {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    background-color: #007bff; /* Specific color for toggle */
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-body.dark-mode #theme-toggle {
-    background-color: #1a73e8; /* Darker blue for dark mode toggle */
-    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.4);
-}
-
-#theme-toggle:hover {
-    background-color: #0056b3;
-}
-
-body.dark-mode #theme-toggle:hover {
-    background-color: #0d47a1;
-}
-
-/* Partnership Form Styling */
-.partnership-form-container {
-    margin-top: 40px;
-    padding: 30px;
-}
-
-.partnership-form-container h2 {
-    font-size: 2em;
-    margin-bottom: 25px;
-    color: var(--text-color);
-    text-shadow: var(--h1-text-shadow);
-    transition: color 0.5s ease, text-shadow 0.5s ease;
-}
-
-.partnership-form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.partnership-form-container label {
-    text-align: left;
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--text-color);
-}
-
-.partnership-form-container input[type="text"],
-.partnership-form-container input[type="email"],
-.partnership-form-container textarea {
-    padding: 12px;
-    border: 1px solid var(--lotto-number-border-color);
-    border-radius: 8px;
-    font-size: 1em;
-    background-color: var(--lotto-number-bg-color);
-    color: var(--text-color);
-    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-}
-
-.partnership-form-container input[type="text"]:focus,
-.partnership-form-container input[type="email"]:focus,
-.partnership-form-container textarea:focus {
-    outline: none;
-    border-color: var(--button-bg-color);
-    box-shadow: 0 0 0 3px rgba(var(--button-bg-color-rgb), 0.3); /* Assuming RGB for dynamic shadow */
-}
-
-.partnership-form-container textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.partnership-form-container button[type="submit"] {
-    padding: 12px 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff; /* Different color for submit button */
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-top: 15px;
-}
-
-.partnership-form-container button[type="submit"]:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.4);
-    background-color: #0056b3;
-}
-
-.partnership-form-container button[type="submit"]:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-body.dark-mode .partnership-form-container button[type="submit"] {
-    background-color: #1a73e8;
-    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.4);
-}
-
-body.dark-mode .partnership-form-container button[type="submit"]:hover {
-    background-color: #0d47a1;
-    box-shadow: 0 8px 15px rgba(26, 115, 232, 0.5);
-}
-
-.main-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Align content to top within wrapper */
-    align-items: center;
-    min-height: 100vh; /* Ensure wrapper takes at least full viewport height */
-    padding: 20px;
-    box-sizing: border-box;
-    width: 100%; /* Ensure it spans full width */
-}
-
-.skip-button {
-    margin-top: 25px;
-    padding: 12px 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #ffc107; /* A distinct color for skip button */
-    color: #333;
-    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-.skip-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(255, 193, 7, 0.4);
-    background-color: #e0a800;
-}
-
-.skip-button:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
-}
-
-/* Ensure partnership form container is not too wide */
-.partnership-form-container {
-    max-width: 500px;
-    width: 100%;
-}
-
-/* New styles for Face Classifier Section */
-#face-classifier-section {
-    text-align: center;
-    background-color: var(--container-bg-color);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: var(--container-shadow);
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-    position: relative;
-    z-index: 1;
-    max-width: 600px;
-    width: 90%;
-    margin-top: 20px; /* Adjust spacing */
-}
-
-#face-classifier-section h1 {
-    font-size: 2.2em; /* Slightly smaller than main h1 */
-    margin-bottom: 20px;
-    color: var(--text-color);
-    text-shadow: var(--h1-text-shadow);
-    transition: color 0.5s ease, text-shadow 0.5s ease;
-}
-
-#face-classifier-section #image-upload {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid var(--lotto-number-border-color);
-    border-radius: 8px;
-    background-color: var(--lotto-number-bg-color);
-    color: var(--text-color);
-    font-size: 1em;
-    cursor: pointer;
-    width: calc(100% - 22px); /* Account for padding and border */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
-
-#face-classifier-section #image-upload::-webkit-file-upload-button {
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    padding: 8px 15px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-#face-classifier-section #image-display-container {
-    margin-bottom: 20px;
-    border: 1px solid var(--lotto-number-border-color); /* Use existing border color var */
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    padding-top: 75%; /* 4:3 Aspect Ratio */
-    background-color: #eee; /* Placeholder background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#face-classifier-section #uploaded-image {
-    position: absolute;
+/* Header and Navbar */
+.header {
+    background-color: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    position: sticky;
     top: 0;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.navbar-nav {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.navbar-nav a {
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar-nav a:hover, .navbar-nav a.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 60vh;
+    padding: 0 2rem;
+    background: linear-gradient(rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 0.9)), url('https://source.unsplash.com/random/1600x900/?technology,ai') no-repeat center center/cover;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-family-base);
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #008ecc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 163, 255, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #3a3a3a;
+    border-color: var(--accent-primary);
+}
+
+/* Tools Section */
+.tools-section {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.tools-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.tool-card {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-color);
+}
+
+.tool-card h3 {
+    font-size: 1.5rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1rem;
+}
+
+.tool-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* Ads Section */
+.ads-section {
+    padding: 2rem;
+    text-align: center;
+    min-height: 100px;
+    background-color: var(--bg-secondary);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content a {
+    color: var(--text-secondary);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Ensure the image fits within the container */
-    max-width: 100%;
-    max-height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
 }
 
-#face-classifier-section #label-container {
-    margin-top: 20px;
-    font-size: 1.2em;
-    min-height: 60px; /* Ensure space for labels */
-    color: var(--text-color);
+.modal-content {
+    background-color: var(--bg-secondary);
+    margin: 10% auto;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 10px 40px var(--shadow-color);
+    animation: slideIn 0.4s ease;
 }
 
-#face-classifier-section #label-container div {
-    margin-bottom: 8px;
-    padding: 10px;
-    background-color: var(--lotto-number-bg-color); /* Reuse existing background var */
-    border-radius: 5px;
-    box-shadow: var(--lotto-number-shadow);
-    transition: background-color 0.5s ease, box-shadow 0.5s ease;
-}
-
-#face-classifier-section #classify-image-button {
-    /* Reuse existing button styles but ensure it adapts to section context */
-    padding: 12px 25px;
-    font-size: 1.1em;
+.close-button {
+    color: var(--text-secondary);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
     cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    box-shadow: var(--button-shadow);
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-top: 20px;
 }
 
-#face-classifier-section #classify-image-button:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--button-shadow), 0 8px 15px rgba(0, 0, 0, 0.25);
+.close-button:hover {
+    color: var(--text-primary);
 }
 
-#face-classifier-section #classify-image-button:active {
-    transform: translateY(0);
-    box-shadow: var(--button-shadow);
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes slideIn { from { transform: translateY(-50px); } to { transform: translateY(0); } }
+
+/* Tool-specific styles within modals */
+#lotto-modal .lotto-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+#lotto-modal .lotto-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#face-modal #image-upload {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: var(--bg-tertiary);
+    border: 1px dashed var(--border-color);
+    padding: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#face-modal #image-display-container {
+    width: 100%;
+    min-height: 200px;
+    background-color: var(--bg-primary);
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#face-modal #uploaded-image {
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+#face-modal #label-container div {
+    background-color: var(--bg-tertiary);
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+}
+
+/* Page container for about, contact, privacy */
+.page-container {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background-color: var(--bg-secondary);
+    border-radius: 10px;
+}
+
+.page-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--accent-primary);
+    padding-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
 }
