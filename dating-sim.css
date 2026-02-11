@@ -55,6 +55,42 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
+/* Result Area Specific Layout */
+#result-area {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Stretch children to fill available width */
+    gap: 14px; /* Gap between sections */
+    width: 100%; /* Take full width of parent */
+    max-width: 720px; /* Max width for result content */
+    margin: 0 auto; /* Center the result card */
+    
+    /* Ensure no multi-column layout */
+    columns: auto;
+    column-count: 1;
+    column-width: auto;
+    
+    /* Inherit/override from .card for background, padding etc. */
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure individual result sections fill their container */
+#result-area h2,
+#result-area p,
+#result-area h3,
+#result-area ul,
+#result-area ul li,
+.result-actions {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box; /* Include padding/border in width */
+}
+
+
 .progress-container {
     width: 100%;
     max-width: 500px;
@@ -180,8 +216,10 @@ body {
 .result-actions {
     margin-top: 30px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Buttons should be horizontal */
+    justify-content: center;
     gap: 10px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 /* Modal Styles */
