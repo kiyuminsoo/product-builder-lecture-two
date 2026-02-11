@@ -842,3 +842,51 @@ img {
   }
 }
 
+
+
+/* ===== Premium hover wave text effect ===== */
+
+/* ===== Premium hover wave text effect ===== */
+/* 줄바꿈(\n)을 실제 줄바꿈처럼 보여주기 */
+.wave-paragraph{
+  white-space: pre-line;
+}
+
+/* 기본: 텍스트는 그대로, 호버 시에만 미세한 파동 */
+.wave-text, .wave-paragraph{
+  display: inline-block;
+  cursor: default;
+}
+
+.wave-text .wave-char,
+.wave-paragraph .wave-char{
+  display:inline-block;
+  will-change: transform;
+  transform: translateY(0);
+}
+
+/* hover: 1회만(조잡한 무한반복 X), 아주 작은 움직임 */
+.wave-text:hover .wave-char{
+  animation: premiumWave .55s cubic-bezier(.2,.9,.2,1) 1;
+  animation-delay: calc(var(--i) * 14ms);
+}
+
+.wave-paragraph:hover .wave-char{
+  animation: premiumWave .50s cubic-bezier(.2,.9,.2,1) 1;
+  animation-delay: calc(var(--i) * 8ms);
+}
+
+@keyframes premiumWave{
+  0%   { transform: translateY(0); }
+  45%  { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* 모션 최소화 설정 시 끄기 */
+@media (prefers-reduced-motion: reduce){
+  .wave-text:hover .wave-char,
+  .wave-paragraph:hover .wave-char{
+    animation: none !important;
+  }
+}
+
