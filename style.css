@@ -314,7 +314,30 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
     transition: color 0.5s ease, text-shadow 0.5s ease;
 }
 
-#face-classifier-section #webcam-container {
+#face-classifier-section #image-upload {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid var(--lotto-number-border-color);
+    border-radius: 8px;
+    background-color: var(--lotto-number-bg-color);
+    color: var(--text-color);
+    font-size: 1em;
+    cursor: pointer;
+    width: calc(100% - 22px); /* Account for padding and border */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+#face-classifier-section #image-upload::-webkit-file-upload-button {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#face-classifier-section #image-display-container {
     margin-bottom: 20px;
     border: 1px solid var(--lotto-number-border-color); /* Use existing border color var */
     border-radius: 8px;
@@ -322,17 +345,21 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
     position: relative;
     width: 100%;
     padding-top: 75%; /* 4:3 Aspect Ratio */
-    background-color: #000; /* Webcam background */
+    background-color: #eee; /* Placeholder background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#face-classifier-section #webcam {
+#face-classifier-section #uploaded-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transform: scaleX(-1); /* Mirror the video */
+    object-fit: contain; /* Ensure the image fits within the container */
+    max-width: 100%;
+    max-height: 100%;
 }
 
 #face-classifier-section #label-container {
@@ -351,7 +378,7 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
     transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-#face-classifier-section #start-classification-button {
+#face-classifier-section #classify-image-button {
     /* Reuse existing button styles but ensure it adapts to section context */
     padding: 12px 25px;
     font-size: 1.1em;
@@ -367,12 +394,12 @@ body.dark-mode .partnership-form-container button[type="submit"]:hover {
     margin-top: 20px;
 }
 
-#face-classifier-section #start-classification-button:hover {
+#face-classifier-section #classify-image-button:hover {
     transform: translateY(-3px);
     box-shadow: var(--button-shadow), 0 8px 15px rgba(0, 0, 0, 0.25);
 }
 
-#face-classifier-section #start-classification-button:active {
+#face-classifier-section #classify-image-button:active {
     transform: translateY(0);
     box-shadow: var(--button-shadow);
 }

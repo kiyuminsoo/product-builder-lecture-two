@@ -53,11 +53,12 @@
 
         <div id="face-classifier-section" class="container" style="display: none;">
             <h1>얼굴상 분류</h1>
-            <div id="webcam-container">
-                <video id="webcam" autoplay playsinline></video>
+            <input type="file" id="image-upload" accept="image/*">
+            <div id="image-display-container">
+                <img id="uploaded-image" src="#" alt="선택된 이미지" style="display: none;">
             </div>
             <div id="label-container"></div>
-            <button id="start-classification-button">분류 시작</button>
+            <button id="classify-image-button">이미지 분류</button>
         </div>
     </div>
     

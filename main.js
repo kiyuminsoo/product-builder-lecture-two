@@ -10,14 +10,15 @@ const skipButton = document.getElementById('skip-button');
 // New elements for face classifier
 const faceClassifierButton = document.getElementById('face-classifier-button');
 const faceClassifierSection = document.getElementById('face-classifier-section');
-const startClassificationButton = document.getElementById('start-classification-button');
-const webcamElement = document.getElementById('webcam'); // Renamed to avoid conflict with TM webcam object
+const imageUploadInput = document.getElementById('image-upload');
+const uploadedImageElement = document.getElementById('uploaded-image');
+const classifyImageButton = document.getElementById('classify-image-button');
 const labelContainer = document.getElementById('label-container');
 
 // Teachable Machine variables
 const URL = "https://teachablemachine.withgoogle.com/models/bk89dlKo6/";
-let model, tmWebcam, maxPredictions; // Renamed webcam to tmWebcam
-let isPredicting = false;
+let model, maxPredictions;
+let isModelLoaded = false;
 
 // Function to set the theme
 function setTheme(theme) {
@@ -36,7 +37,6 @@ const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
     setTheme(savedTheme);
 } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    // If no saved theme, check system preference
     setTheme('dark');
 } else {
     setTheme('light'); // Default to light mode
@@ -63,7 +63,6 @@ function loadDisqus() {
         });
     } else {
         // Fallback for initial load if DISQUS object is not ready
-        // The script in index.html should handle initial loading if lottoSection is visible
     }
 }
 
@@ -71,74 +70,111 @@ skipButton.addEventListener('click', () => {
     formSection.style.display = 'none';
     lottoSection.style.display = 'block';
     faceClassifierSection.style.display = 'none'; // Hide face classifier section
-    stopPrediction(); // Stop any ongoing prediction
     loadDisqus();
 });
 
-faceClassifierButton.addEventListener('click', () => {
+faceClassifierButton.addEventListener('click', async () => {
     formSection.style.display = 'none';
     lottoSection.style.display = 'none';
     faceClassifierSection.style.display = 'block'; // Show face classifier section
-    // No auto-init for Teachable Machine, user clicks button
-});
-
-startClassificationButton.addEventListener('click', () => {
-    if (!isPredicting) {
-        initTeachableMachine(); // Start the webcam and prediction
-    } else {
-        stopPrediction(); // Stop the webcam and prediction
+    if (!isModelLoaded) {
+        await initTeachableMachineModel();
     }
+    resetFaceClassifierUI();
 });
 
-async function initTeachableMachine() {
+async function initTeachableMachineModel() {
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
+    try {
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+        isModelLoaded = true;
+        // console.log("Teachable Machine model loaded successfully.");
+    } catch (error) {
+        console.error("Failed to load Teachable Machine model:", error);
+        labelContainer.innerHTML = '<div>모델 로딩 실패. 콘솔을 확인하세요.</div>';
+    }
+}
 
-    const flip = true;
-    tmWebcam = new tmImage.Webcam(200, 200, flip);
-    await tmWebcam.setup({ facingMode: "user" });
-    tmWebcam.canvas.style.display = 'none'; // Hide TM's canvas, use video element
+imageUploadInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedImageElement.src = e.target.result;
+            uploadedImageElement.style.display = 'block';
+            labelContainer.innerHTML = ''; // Clear previous predictions
+            classifyImageButton.style.display = 'block'; // Show classify button
+        };
+        reader.readAsDataURL(file);
+    } else {
+        uploadedImageElement.src = '#';
+        uploadedImageElement.style.display = 'none';
+        labelContainer.innerHTML = '';
+        classifyImageButton.style.display = 'none';
+    }
+});
 
-    webcamElement.srcObject = tmWebcam.stream; // Assign TM stream to video element
+classifyImageButton.addEventListener('click', async () => {
+    if (!isModelLoaded) {
+        labelContainer.innerHTML = '<div>모델이 로딩되지 않았습니다. 잠시 후 다시 시도해주세요.</div>';
+        await initTeachableMachineModel(); // Try loading again
+        if (!isModelLoaded) return;
+    }
+    if (uploadedImageElement.src && uploadedImageElement.src !== window.location.href + '#') {
+        classifyImageButton.disabled = true;
+        classifyImageButton.textContent = '분류 중...';
+        await predictImage();
+        classifyImageButton.disabled = false;
+        classifyImageButton.textContent = '이미지 분류';
+    } else {
+        labelContainer.innerHTML = '<div>이미지를 먼저 업로드해주세요.</div>';
+    }
+});
+
+async function predictImage() {
+    if (!uploadedImageElement.src || uploadedImageElement.style.display === 'none') {
+        labelContainer.innerHTML = '<div>분류할 이미지가 없습니다.</div>';
+        return;
+    }
     
-    labelContainer.innerHTML = ''; // Clear previous labels
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
-    }
+    // Create a temporary canvas to draw the image to the correct size for prediction
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const imageSize = 224; // Teachable Machine models typically expect 224x224 input
 
-    startClassificationButton.textContent = "분류 중지";
-    isPredicting = true;
-    window.requestAnimationFrame(loopTeachableMachine);
+    canvas.width = imageSize;
+    canvas.height = imageSize;
+
+    // Draw the image onto the canvas, scaling it
+    ctx.drawImage(uploadedImageElement, 0, 0, imageSize, imageSize);
+
+    try {
+        const prediction = await model.predict(canvas);
+        labelContainer.innerHTML = ''; // Clear previous labels
+        for (let i = 0; i < maxPredictions; i++) {
+            const classPrediction =
+                prediction[i].className + ": " + (prediction[i].probability * 100).toFixed(2) + "%";
+            const div = document.createElement('div');
+            div.textContent = classPrediction;
+            labelContainer.appendChild(div);
+        }
+    } catch (error) {
+        console.error("Prediction failed:", error);
+        labelContainer.innerHTML = '<div>분류 중 오류가 발생했습니다.</div>';
+    }
 }
 
-async function loopTeachableMachine() {
-    if (isPredicting) {
-        tmWebcam.update();
-        await predict();
-        window.requestAnimationFrame(loopTeachableMachine);
-    }
-}
-
-async function predict() {
-    const prediction = await model.predict(webcamElement); // Use webcamElement for prediction
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
-}
-
-function stopPrediction() {
-    isPredicting = false;
-    if (tmWebcam) {
-        tmWebcam.stop();
-        webcamElement.srcObject = null;
-    }
-    startClassificationButton.textContent = "분류 시작";
+function resetFaceClassifierUI() {
+    uploadedImageElement.src = '#';
+    uploadedImageElement.style.display = 'none';
+    imageUploadInput.value = ''; // Clear file input
     labelContainer.innerHTML = '';
+    classifyImageButton.style.display = 'none';
+    classifyImageButton.disabled = false;
+    classifyImageButton.textContent = '이미지 분류';
 }
 
 
