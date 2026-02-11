@@ -1276,3 +1276,64 @@ nav a, nav button {
 /* 혹시 hero-bg z-index가 과하게 높으면 내려버림 */
 .hero-bg { z-index: 0 !important; }
 .hero-inner { position: relative; z-index: 1 !important; }
+
+/* === TOOLS: CARD + BUTTON LAYOUT UNIFY (POSITION/SIZE/TYPO) === */
+:root{
+  --tool-card-minh: 320px;
+  --tool-btn-h: 46px;
+  --tool-btn-w: 140px;
+  --tool-btn-fz: 14px;
+  --tool-title-fz: 26px;
+  --tool-body-fz: 15px;
+}
+
+/* grid/flex 컨테이너가 뭐든 카드 높이 늘어나게 */
+#tools :is(.tools-grid,.tool-grid,.grid,.cards,.tools){
+  align-items: stretch !important;
+}
+
+/* 카드 자체를 세로 플렉스로 만들어 버튼을 바닥으로 밀어내기 */
+#tools :is(.tool-card,.card,.tool){
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: var(--tool-card-minh) !important;
+}
+
+/* 타이포 통일 */
+#tools :is(.tool-card,.card,.tool) h3{
+  font-size: var(--tool-title-fz) !important;
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 12px !important;
+}
+
+#tools :is(.tool-card,.card,.tool) p{
+  font-size: var(--tool-body-fz) !important;
+  line-height: 1.65 !important;
+  margin-bottom: 18px !important;
+}
+
+/* 버튼 크기/모양/글자 + "항상 아래" 위치 통일 */
+#tools :is(.tool-card,.card,.tool) :is(.tool-btn,.btn,a.btn,button.btn){
+  /* 위치 통일 핵심 */
+  margin-top: auto !important;
+
+  /* 크기/글자 통일 */
+  min-width: var(--tool-btn-w) !important;
+  height: var(--tool-btn-h) !important;
+  padding: 0 18px !important;
+  font-size: var(--tool-btn-fz) !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 14px !important;
+}
+
+/* 버튼이 가운데로 와야 하면 이 줄 켜고, 왼쪽 정렬이면 주석 유지 */
+/* #tools :is(.tool-card,.card,.tool) :is(.tool-btn,.btn,a.btn,button.btn){ align-self: center !important; } */
+
