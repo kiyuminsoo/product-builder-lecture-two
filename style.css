@@ -1161,3 +1161,63 @@ header, .site-header{
   .tilt-card{ transition: none !important; transform:none !important; }
   body{ background: var(--bg) !important; }
 }
+
+
+/* === HOME CENTER HERO + TOOL BUTTONS (OVERRIDE) === */
+
+/* Home hero: 1-column centered */
+.hero--center {
+  text-align: center !important;
+}
+
+.hero--center .hero-grid,
+.hero--center .hero-layout,
+.hero--center .hero-inner,
+.hero--center .hero-content,
+.hero--center .hero-wrap {
+  grid-template-columns: 1fr !important;
+  justify-items: center !important;
+  text-align: center !important;
+}
+
+.hero--center .hero-right,
+.hero--center .hero-desc,
+.hero--center .hero-copy,
+.hero--center .hero-text,
+.hero--center .hero-description {
+  display: none !important;
+}
+
+/* Tool card buttons: same size/shape */
+.tool-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 140px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  backdrop-filter: blur(10px);
+}
+
+.tool-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.20);
+  background: rgba(255,255,255,.09);
+}
+
+.tool-btn:active {
+  transform: translateY(0);
+}
+
+.tool-btn:focus-visible {
+  outline: 2px solid rgba(120,255,215,.45);
+  outline-offset: 3px;
+}
