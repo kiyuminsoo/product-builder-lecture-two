@@ -25,6 +25,23 @@ body {
     transform: none !important;
 }
 
+/* Text readability and layout fixes for Korean text */
+.simulator-container h1,
+.simulator-container h2,
+.simulator-container h3,
+.simulator-container p,
+.simulator-container ul li,
+#question-text,
+.reaction-text,
+.modal-content h2,
+.modal-content p {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 1.6; /* Increased slightly for better readability */
+}
+
+
 .card {
     background: #fff;
     padding: 30px;
@@ -71,6 +88,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center; /* Ensure text is centered horizontally within its flex container */
 }
 
 .reaction-text {
