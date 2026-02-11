@@ -798,3 +798,47 @@ img {
   .home-intro .intro-grid{grid-template-columns: 1fr;}
 }
 
+
+
+/* ===== Wave hover text effect ===== */
+
+/* ===== Wave hover text effect ===== */
+.wave-text, .wave-paragraph{
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+
+/* 글자 단위로 쪼개서 웨이브 주기 위한 래핑(span) */
+.wave-text .wave-char, .wave-paragraph .wave-char{
+  display:inline-block;
+  will-change: transform, filter, opacity;
+  transition: transform .18s ease, filter .18s ease, opacity .18s ease;
+}
+
+/* hover 시 물결 */
+.wave-text:hover .wave-char,
+.wave-paragraph:hover .wave-char{
+  animation: waveFloat .85s ease-in-out infinite;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+}
+
+/* 글자마다 딜레이를 달리 주는 핵심 */
+.wave-text:hover .wave-char{ animation-delay: calc(var(--i) * 35ms); }
+.wave-paragraph:hover .wave-char{ animation-delay: calc(var(--i) * 18ms); }
+
+@keyframes waveFloat{
+  0%{ transform: translateY(0); opacity: 1; }
+  50%{ transform: translateY(-8px); opacity: .95; }
+  100%{ transform: translateY(0); opacity: 1; }
+}
+
+/* 모바일 접근성: 모션 줄이기 설정이면 애니메이션 끄기 */
+@media (prefers-reduced-motion: reduce){
+  .wave-text:hover .wave-char,
+  .wave-paragraph:hover .wave-char{
+    animation: none !important;
+    filter: none !important;
+  }
+}
+

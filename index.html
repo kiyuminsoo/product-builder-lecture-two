@@ -33,8 +33,8 @@
 
 <section class="hero">
             <div class="hero-content">
-                <h1>테스트 공방: 아이디어를 현실로, 재미를 경험하다</h1>
-                <p>테스트 공방은 일상 속 궁금증을 ‘짧고 재밌게’ 풀어주는 인터랙티브 도구들을 모은 공간입니다.
+                <h1 class="wave-text">테스트 공방: 아이디어를 현실로, 재미를 경험하다</h1>
+                <p class="wave-paragraph">테스트 공방은 일상 속 궁금증을 ‘짧고 재밌게’ 풀어주는 인터랙티브 도구들을 모은 공간입니다.
 소개팅 시뮬레이터부터 성향·재미 테스트까지, 클릭 몇 번으로 결과를 확인하고 공유할 수 있어요.
 새 도구는 꾸준히 추가되고, 사용자 피드백으로 더 빠르고 편하게 개선됩니다.</p>
                 <a href="#tools" class="btn btn-primary">도구 둘러보기</a>
@@ -116,6 +116,34 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     
     <script src="main.js"></script>
+
+
+<script>
+(function(){
+  function wrapWaveChars(el){
+    // 이미 래핑되어 있으면 스킵
+    if (el.querySelector('.wave-char')) return;
+
+    // 텍스트 노드만 대상으로 안전하게 처리(자식 태그 있으면 텍스트만 변환)
+    const text = el.textContent;
+    el.textContent = "";
+
+    const frag = document.createDocumentFragment();
+    Array.from(text).forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.className = "wave-char";
+      span.style.setProperty("--i", i);
+      span.textContent = ch;
+      frag.appendChild(span);
+    });
+    el.appendChild(frag);
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".wave-text, .wave-paragraph").forEach(wrapWaveChars);
+  });
+})();
+</script>
 
 </body>
 </html>
