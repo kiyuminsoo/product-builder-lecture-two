@@ -800,15 +800,6 @@ img {
 
 
 
-/* ===== Wave hover text effect ===== */
-
-/* ===== Wave hover text effect ===== */
-.wave-text, .wave-paragraph{
-  position: relative;
-  display: inline-block;
-  cursor: default;
-}
-
 /* 글자 단위로 쪼개서 웨이브 주기 위한 래핑(span) */
 .wave-text .wave-char, .wave-paragraph .wave-char{
   display:inline-block;
@@ -844,9 +835,6 @@ img {
 
 
 
-/* ===== Premium hover wave text effect ===== */
-
-/* ===== Premium hover wave text effect ===== */
 /* 줄바꿈(\n)을 실제 줄바꿈처럼 보여주기 */
 .wave-paragraph{
   white-space: pre-line;
@@ -883,6 +871,50 @@ img {
 }
 
 /* 모션 최소화 설정 시 끄기 */
+@media (prefers-reduced-motion: reduce){
+  .wave-text:hover .wave-char,
+  .wave-paragraph:hover .wave-char{
+    animation: none !important;
+  }
+}
+
+
+/* ===== Premium hover wave text effect ===== */
+/* 소개 문구 줄바꿈(\n)을 실제 줄바꿈처럼 표시 */
+.wave-paragraph{
+  white-space: pre-line;
+}
+
+/* h1/p 레이아웃은 그대로 두고, 텍스트(span)만 효과 */
+.wave-text, .wave-paragraph{
+  display: inline-block;
+  cursor: default;
+}
+
+.wave-text .wave-char,
+.wave-paragraph .wave-char{
+  display: inline-block;
+  will-change: transform;
+  transform: translateY(0);
+}
+
+/* hover: 무한반복 X, 1회만 고급스럽게 */
+.wave-text:hover .wave-char{
+  animation: premiumWave .55s cubic-bezier(.2,.9,.2,1) 1;
+  animation-delay: calc(var(--i) * 14ms);
+}
+.wave-paragraph:hover .wave-char{
+  animation: premiumWave .50s cubic-bezier(.2,.9,.2,1) 1;
+  animation-delay: calc(var(--i) * 8ms);
+}
+
+@keyframes premiumWave{
+  0%   { transform: translateY(0); }
+  45%  { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* 모션 최소화 설정 */
 @media (prefers-reduced-motion: reduce){
   .wave-text:hover .wave-char,
   .wave-paragraph:hover .wave-char{
