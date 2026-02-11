@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             }
         }
-    };;
+    };
     
     function displayMessage(sender, text, type) {
         const messageWrapper = document.createElement('div');
