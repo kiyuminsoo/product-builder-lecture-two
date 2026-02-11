@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>커뮤니티</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .community-wrap{max-width:980px;margin:0 auto;padding:16px}
+    .community-card{background:var(--bg-secondary,#fff);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .community-card h2{margin:0 0 8px 0}
+    .community-card p{margin:0 0 14px 0;line-height:1.6}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>커뮤니티</h1>
+  </header>
+
+  <main class="community-wrap">
+    <section class="community-card">
+      <h2>의견 / 버그 제보 / 컨텐츠 제안</h2>
+      <p>개선 아이디어나 버그, 추가로 만들었으면 하는 컨텐츠를 자유롭게 남겨주세요.</p>
+
+      <div id="disqus_thread"></div>
+      <script>
+        var disqus_config = function () {
+          this.page.url = window.location.href;
+          this.page.identifier = "community";
+        };
+        (function() {
+          var d = document, s = d.createElement('script');
+          s.src = 'https://yuminsu.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>댓글을 보려면 자바스크립트를 켜주세요.</noscript>
+    </section>
+  </main>
+</body>
+</html>
