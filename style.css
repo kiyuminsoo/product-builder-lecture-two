@@ -1253,3 +1253,26 @@ header, .site-header{
 
   border-radius: 14px !important;
 }
+
+/* === NAV CLICK FIX (header above overlays) === */
+header, .header, .site-header, .topbar, nav, .nav {
+  position: relative;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+header a, header button, header nav,
+nav a, nav button {
+  pointer-events: auto !important;
+}
+
+/* hero/배경 레이어는 클릭 먹지 않도록 */
+.hero-bg, .hero-bg::before, .hero-bg::after,
+.orb, .scan,
+.hero::before, .hero::after {
+  pointer-events: none !important;
+}
+
+/* 혹시 hero-bg z-index가 과하게 높으면 내려버림 */
+.hero-bg { z-index: 0 !important; }
+.hero-inner { position: relative; z-index: 1 !important; }
