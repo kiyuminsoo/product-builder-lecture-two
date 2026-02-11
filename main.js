@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userMessageInput = datingChatModal.querySelector('#user-message-input');
     const sendMessageButton = datingChatModal.querySelector('#send-message-button');
     const startDatingChatButton = datingChatModal.querySelector('#start-dating-chat-button');
-    const userGenderRadios = datingChatModal.querySelectorAll('input[name="user-gender"]');
+    // Removed userGenderRadios as they are no longer in index.html
     const userAgeInput = datingChatModal.querySelector('#user-age');
     const aiPersonalityRadios = datingChatModal.querySelectorAll('input[name="ai-personality"]');
 
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const allAiPersonalities = {
         tsundere: {
-            name: "까칠한 그",
+            name: "까칠한 그녀", // Changed to female
             initialMessage: "흐음, 뭐, 어서 와. 별다른 용건은 없겠지? 흥.",
             responses: [
                 { keywords: ["안녕", "반가워"], response: "그래, 별일 없으면 나중에 다시 와." },
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fallbackResponse: "음냐링... 무슨 말인지 잘 모르겠어요! 🥺 다시 말해줄 수 있어요?"
         },
         cool: {
-            name: "시크한 그",
+            name: "시크한 그녀", // Changed to female
             initialMessage: "왔는가. 별 볼일 없으면 이만.",
             responses: [
                 { keywords: ["안녕", "반가워"], response: "왔나. 용건은." },
@@ -276,6 +276,14 @@ document.addEventListener('DOMContentLoaded', () => {
         messageWrapper.classList.add('message');
         messageWrapper.classList.add(type); // 'user-message' or 'ai-message'
         
+        // Add profile image/initial for AI messages
+        if (type === 'ai-message') {
+            const profileDiv = document.createElement('div');
+            profileDiv.classList.add('message-profile');
+            profileDiv.textContent = sender.charAt(0); // Use first letter of name
+            messageWrapper.appendChild(profileDiv);
+        }
+
         const messageContent = document.createElement('div');
         messageContent.classList.add('message-content');
         messageContent.textContent = text;
@@ -288,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageWrapper.appendChild(timestamp);
             messageWrapper.appendChild(messageContent);
         } else { // ai-message
+            // For AI, message content comes after profile, timestamp after content
             messageWrapper.appendChild(messageContent);
             messageWrapper.appendChild(timestamp);
         }
@@ -303,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
             typingIndicatorElement = document.createElement('div');
             typingIndicatorElement.classList.add('typing-indicator', 'ai-message');
             typingIndicatorElement.innerHTML = `
+                <div class="message-profile"></div> <!-- Placeholder for AI profile in typing -->
                 <div class="message-content">
                     <span></span><span></span><span></span>
                 </div>
@@ -369,14 +379,13 @@ document.addEventListener('DOMContentLoaded', () => {
         userMessageInput.disabled = false;
         sendMessageButton.disabled = false;
         hideTypingIndicator();
-        // Reset setup screen inputs
-        datingChatModal.querySelector('#gender-male').checked = true;
+        // Reset setup screen inputs - removed gender, only age and personality left
         userAgeInput.value = '25';
         datingChatModal.querySelector('#personality-tsundere').checked = true;
     }
 
     startDatingChatButton.addEventListener('click', () => {
-        const selectedGender = datingChatModal.querySelector('input[name="user-gender"]:checked').value;
+        // Removed selectedGender
         const userAge = parseInt(userAgeInput.value);
         const selectedPersonality = datingChatModal.querySelector('input[name="ai-personality"]:checked').value;
 

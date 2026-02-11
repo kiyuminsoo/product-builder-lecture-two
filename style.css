@@ -561,15 +561,31 @@ img {
     background: var(--text-secondary);
 }
 
-
 .message {
     display: flex;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem; /* Increased spacing */
     max-width: 80%;
     word-wrap: break-word;
     font-size: 0.95rem;
     animation: message-pop-in 0.3s ease-out forwards;
     transform-origin: bottom;
+    align-items: flex-end; /* Align items to bottom for consistent timestamp placement */
+}
+
+.message-profile {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--accent-secondary); /* A distinct color for AI profile */
+    color: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 8px; /* Space between profile and message */
+    flex-shrink: 0; /* Prevent shrinking */
+    overflow: hidden; /* For future images */
 }
 
 .message-content {
@@ -584,19 +600,25 @@ img {
     font-size: 0.75rem;
     color: var(--text-secondary);
     margin-bottom: 0.2rem;
+    position: absolute; /* Position sender name */
+    top: -1.2rem;
+    left: 0;
+    white-space: nowrap;
 }
 
 .message-timestamp {
     font-size: 0.7rem;
     color: var(--text-secondary);
-    margin-top: 0.4rem;
+    margin: 0 0.5rem; /* Space timestamps better */
     white-space: nowrap;
     opacity: 0.7;
+    align-self: flex-end; /* Align timestamp to bottom of message */
 }
 
 /* User Message */
 .user-message {
     align-self: flex-end; /* Push to right */
+    flex-direction: row-reverse; /* Put timestamp on the right */
     text-align: right;
 }
 .user-message .message-content {
@@ -605,14 +627,15 @@ img {
     border-bottom-right-radius: 0.3rem; /* Tail effect */
 }
 .user-message .message-timestamp {
-    text-align: right;
-    margin-right: 0.5rem;
+    margin-right: 0; /* Adjust margin */
+    margin-left: 0.5rem;
 }
 
 
 /* AI Message */
 .ai-message {
     align-self: flex-start; /* Push to left */
+    flex-direction: row; /* Default direction */
     text-align: left;
 }
 .ai-message .message-content {
@@ -621,32 +644,42 @@ img {
     border-bottom-left-radius: 0.3rem; /* Tail effect */
 }
 .ai-message .message-timestamp {
-    text-align: left;
-    margin-left: 0.5rem;
+    margin-left: 0; /* Adjust margin */
+    margin-right: 0.5rem;
 }
 
 /* Typing Indicator (Simple dots) */
 .typing-indicator {
     display: flex;
-    align-items: center;
-    padding: 0.7rem 1rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 1.2rem;
+    align-items: flex-end; /* Align to bottom like messages */
     max-width: fit-content;
-    margin-left: 0.5rem;
+    margin-left: 0.5rem; /* Indent like AI message */
     animation: message-pop-in 0.3s ease-out forwards;
 }
-.typing-indicator span {
+
+.typing-indicator .message-profile {
+    background-color: var(--bg-tertiary); /* Match AI bubble */
+}
+
+.typing-indicator .message-content {
+    background-color: var(--bg-tertiary);
+    padding: 0.7rem 1rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Space dots */
+}
+.typing-indicator .message-content span {
     width: 6px;
     height: 6px;
     background-color: var(--text-secondary);
     border-radius: 50%;
-    margin: 0 2px;
     animation: bounce 1.4s infinite ease-in-out both;
 }
-.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0s; }
+.typing-indicator .message-content span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator .message-content span:nth-child(2) { animation-delay: -0.16s; }
+.typing-indicator .message-content span:nth-child(3) { animation-delay: 0s; }
 
 @keyframes bounce {
   0%, 80%, 100% { transform: scale(0); }
@@ -689,4 +722,5 @@ img {
     background-color: var(--accent-primary);
     color: white;
 }
+
 
