@@ -284,3 +284,49 @@ body {
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0;
 }
+/* === FORCE SINGLE COLUMN LAYOUT (Fix 2-column look) === */
+.simulator-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* simulator / result should never create side columns */
+  #simulator-area,
+  #result-area {
+    width: 100% !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* ensure internal blocks fill width */
+  .progress-container,
+  #question-card,
+  .navigation-buttons,
+  .result-actions {
+    width: 100% !important;
+    max-width: 720px !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* back button should be normal below the card */
+  .navigation-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* remove any accidental multi-column behavior */
+  #result-area,
+  #result-area * {
+    columns: auto !important;
+    column-count: auto !important;
+  }
