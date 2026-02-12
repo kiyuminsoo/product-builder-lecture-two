@@ -10,15 +10,15 @@
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="#" aria-label="홈으로">PayCheck Lab</a>
-      <nav class="top-nav" aria-label="상단 메뉴">
-        <a href="#" class="tab active">실수령 계산</a>
-        <a href="#" class="tab">세율 가이드</a>
-        <a href="#" class="tab">업데이트 노트</a>
+      <nav class="top-nav" role="tablist" aria-label="상단 메뉴">
+        <button class="tab active" id="tab-calculator" role="tab" aria-selected="true" aria-controls="panel-calculator" data-tab-target="calculator">실수령 계산</button>
+        <button class="tab" id="tab-tax-guide" role="tab" aria-selected="false" aria-controls="panel-tax-guide" data-tab-target="tax-guide">세율 가이드</button>
+        <button class="tab" id="tab-update-note" role="tab" aria-selected="false" aria-controls="panel-update-note" data-tab-target="update-note">업데이트 노트</button>
       </nav>
     </div>
   </header>
 
-  <main class="page">
+  <main class="page tab-panel active" id="panel-calculator" role="tabpanel" aria-labelledby="tab-calculator">
     <section class="panel input-panel" aria-labelledby="input-title">
       <h1 id="input-title">급여 조건 입력</h1>
 
@@ -109,6 +109,35 @@
       </div>
     </section>
   </main>
+
+  <section class="info-panel tab-panel" id="panel-tax-guide" role="tabpanel" aria-labelledby="tab-tax-guide" aria-hidden="true">
+    <div class="info-card">
+      <h2>세율 가이드</h2>
+      <p>이 계산기는 2026년 MVP 기준으로, 실무 체감에 가까운 월 단위 추정 공제 구조를 제공합니다.</p>
+      <ul>
+        <li>국민연금: 월 과세금액 x 4.75%</li>
+        <li>건강보험: 월 과세금액 x 3.595%</li>
+        <li>장기요양: 건강보험료 x 13.14%</li>
+        <li>고용보험: 월 과세금액 x 0.9%</li>
+        <li>소득세: 월 과세금액 구간별 추정 함수 적용</li>
+        <li>지방소득세: 소득세의 10%</li>
+      </ul>
+      <p>비과세액은 월 과세금액에서 차감하며, 과세금액은 0원 미만으로 내려가지 않도록 처리합니다.</p>
+    </div>
+  </section>
+
+  <section class="info-panel tab-panel" id="panel-update-note" role="tabpanel" aria-labelledby="tab-update-note" aria-hidden="true">
+    <div class="info-card">
+      <h2>업데이트 노트</h2>
+      <ul>
+        <li>탭 전환: active 클래스/aria 속성 기반으로 동작하도록 개선</li>
+        <li>세금 계산: 연 기준 누진세 직적용 방식에서 월 단위 추정 방식으로 교체</li>
+        <li>퇴직금 옵션: 월급 산정에만 반영하고 공제 계산과 분리</li>
+        <li>입력 검증: 음수/비정상 입력 자동 보정 강화</li>
+        <li>결과 애니메이션/툴팁: 기존 UX 유지</li>
+      </ul>
+    </div>
+  </section>
 
   <template id="tooltipTemplate">
     <button type="button" class="tip" aria-label="계산 기준 보기">?</button>

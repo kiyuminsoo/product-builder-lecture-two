@@ -5,15 +5,13 @@ const RATES = {
   employmentInsurance: 0.009,
 };
 
-const TAX_BRACKETS = [
-  { upTo: 14_000_000, rate: 0.06, deduction: 0 },
-  { upTo: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { upTo: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { upTo: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { upTo: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { upTo: 500_000_000, rate: 0.4, deduction: 25_940_000 },
-  { upTo: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { upTo: Infinity, rate: 0.45, deduction: 65_940_000 },
+const MONTHLY_TAX_BRACKETS = [
+  { upTo: 1_500_000, rate: 0, deduction: 0 },
+  { upTo: 3_000_000, rate: 0.06, deduction: 90_000 },
+  { upTo: 5_000_000, rate: 0.09, deduction: 180_000 },
+  { upTo: 8_000_000, rate: 0.12, deduction: 330_000 },
+  { upTo: 12_000_000, rate: 0.15, deduction: 570_000 },
+  { upTo: Infinity, rate: 0.19, deduction: 1_050_000 },
 ];
 
 const DEFAULTS = {
@@ -42,6 +40,8 @@ const dom = {
   totalDeduction: document.getElementById("totalDeduction"),
   copyBtn: document.getElementById("copyBtn"),
   resetBtn: document.getElementById("resetBtn"),
+  tabs: document.querySelectorAll(".tab[data-tab-target]"),
+  tabPanels: document.querySelectorAll(".tab-panel"),
 };
 
 const state = {
@@ -83,14 +83,14 @@ function formatInputValue(element, value) {
   element.value = value > 0 ? numberFormatter.format(value) : "0";
 }
 
-function getAnnualTaxEstimate(annualTaxableBase, dependents, children) {
-  const dependentDeduction = dependents * 1_500_000;
-  const childDeduction = children * 1_000_000;
-  const adjustedBase = Math.max(0, annualTaxableBase - dependentDeduction - childDeduction);
+function estimateMonthlyIncomeTax(monthlyTaxable, dependents, children) {
+  const bracket = MONTHLY_TAX_BRACKETS.find((item) => monthlyTaxable <= item.upTo)
+    || MONTHLY_TAX_BRACKETS[MONTHLY_TAX_BRACKETS.length - 1];
+  const rawTax = Math.max(0, monthlyTaxable * bracket.rate - bracket.deduction);
 
-  const bracket = TAX_BRACKETS.find((item) => adjustedBase <= item.upTo) || TAX_BRACKETS[TAX_BRACKETS.length - 1];
-  const estimated = adjustedBase * bracket.rate - bracket.deduction;
-  return Math.max(0, estimated);
+  const extraDependentCredit = Math.max(0, dependents - 1) * 15_000;
+  const childCredit = children * 12_000;
+  return Math.max(0, rawTax - extraDependentCredit - childCredit);
 }
 
 function calculateFromState() {
@@ -108,9 +108,7 @@ function calculateFromState() {
   const longTermCare = healthInsurance * RATES.longTermCareOnHealth;
   const employmentInsurance = monthlyTaxable * RATES.employmentInsurance;
 
-  const annualTaxableBase = monthlyTaxable * 12;
-  const annualIncomeTax = getAnnualTaxEstimate(annualTaxableBase, state.dependents, state.children);
-  const incomeTax = annualIncomeTax / 12;
+  const incomeTax = estimateMonthlyIncomeTax(monthlyTaxable, state.dependents, state.children);
   const localIncomeTax = incomeTax * 0.1;
 
   const totalDeduction = nationalPension + healthInsurance + longTermCare + employmentInsurance + incomeTax + localIncomeTax;
@@ -163,7 +161,17 @@ function render(result) {
 }
 
 function recalculate() {
-  render(calculateFromState());
+  const result = calculateFromState();
+  render(result);
+  console.debug("[salary-calc]", {
+    salaryBasis: state.salaryBasis,
+    severanceMode: state.severanceMode,
+    salaryAmount: state.salaryAmount,
+    nontaxMonthly: state.nontaxMonthly,
+    dependents: state.dependents,
+    children: state.children,
+    ...result,
+  });
 }
 
 function scheduleRecalculate() {
@@ -176,6 +184,20 @@ function updateToggle(group, value) {
     const selected = button.dataset.value === value;
     button.classList.toggle("active", selected);
     button.setAttribute("aria-pressed", selected ? "true" : "false");
+  });
+}
+
+function activateTab(target) {
+  dom.tabs.forEach((tab) => {
+    const selected = tab.dataset.tabTarget === target;
+    tab.classList.toggle("active", selected);
+    tab.setAttribute("aria-selected", selected ? "true" : "false");
+  });
+
+  dom.tabPanels.forEach((panel) => {
+    const isActive = panel.id === `panel-${target}`;
+    panel.classList.toggle("active", isActive);
+    panel.setAttribute("aria-hidden", isActive ? "false" : "true");
   });
 }
 
@@ -271,6 +293,12 @@ function resetAll() {
 }
 
 function bindEvents() {
+  dom.tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      activateTab(tab.dataset.tabTarget);
+    });
+  });
+
   document.querySelectorAll(".toggle-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const { group, value } = button.dataset;
@@ -341,6 +369,7 @@ function bindEvents() {
 
 function init() {
   attachTooltips();
+  activateTab("calculator");
   updateToggle("salaryBasis", state.salaryBasis);
   updateToggle("severanceMode", state.severanceMode);
   sanitizeInputs();
