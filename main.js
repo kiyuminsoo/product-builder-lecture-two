@@ -1,247 +1,226 @@
-const INSURANCE_RATES_2026 = {
-  nationalPension: 0.045,
-  healthInsurance: 0.03545,
-  longTermCareOnHealth: 0.1295,
-  employmentInsurance: 0.009,
-};
+document.addEventListener('DOMContentLoaded', () => {
+    // Global Error Handler
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error("An unhandled error occurred:", { message, source, lineno, colno, error });
+        alert(`Unhandled Error: ${message}\n\nPlease check the console for more details.`);
+        return true; // Prevent default browser error handling
+    };
 
-const TAX_BRACKETS = [
-  { max: 14_000_000, rate: 0.06, quickDeduction: 0 },
-  { max: 50_000_000, rate: 0.15, quickDeduction: 1_260_000 },
-  { max: 88_000_000, rate: 0.24, quickDeduction: 5_760_000 },
-  { max: 150_000_000, rate: 0.35, quickDeduction: 15_440_000 },
-  { max: 300_000_000, rate: 0.38, quickDeduction: 19_940_000 },
-  { max: 500_000_000, rate: 0.4, quickDeduction: 25_940_000 },
-  { max: 1_000_000_000, rate: 0.42, quickDeduction: 35_940_000 },
-  { max: Infinity, rate: 0.45, quickDeduction: 65_940_000 },
-];
+    // --- Modal Handling ---
+    const toolButtons = document.querySelectorAll('.btn[data-tool]');
+    const modals = document.querySelectorAll('.modal');
+    const closeButtons = document.querySelectorAll('.close-button');
 
-const KRW = new Intl.NumberFormat("ko-KR");
+    // Function to open a modal
+    const openModal = (modalId) => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+            modal.scrollTop = 0; // Scroll to top of modal when opened
+            // Lazy load face model and reset UI
+            if (modalId === 'face-modal') {
+                if (!isFaceModelLoaded) {
+                    initFaceClassifierModel();
+                }
+                resetFaceClassifierUI();
+            }
+        }
+    };
 
-const state = {
-  payMode: "monthly",
-};
+    // Function to close a modal
+    const closeModal = (modal) => {
+        if (modal) {
+            modal.style.display = 'none';
+            // Stop any processes in modals
+            if (modal.id === 'face-modal') {
+                resetFaceClassifierUI(); // Ensure face classifier is reset
+            }
+        }
+    };
 
-function getEl(id) {
-  return document.getElementById(id);
-}
+    toolButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const toolName = button.getAttribute('data-tool');
+            openModal(`${toolName}-modal`);
+        });
+    });
 
-function onlyDigits(value) {
-  return (value || "").replace(/[^\d]/g, "");
-}
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            closeModal(modal);
+        });
+    });
 
-function toNumber(value) {
-  const digits = onlyDigits(value);
-  return digits ? Number(digits) : 0;
-}
+    // Close modal when clicking outside the content
+    window.addEventListener('click', (event) => {
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                closeModal(modal);
+            }
+        });
+    });
 
-function formatKRW(value) {
-  return `${KRW.format(Math.round(value))}원`;
-}
 
-function formatInputOnType(e) {
-  const raw = onlyDigits(e.target.value);
-  e.target.value = raw ? KRW.format(Number(raw)) : "";
-}
+    // --- Lotto Generator Logic ---
+    const lottoNumbersContainer = document.querySelector('#lotto-modal .lotto-numbers');
+    const drawButton = document.getElementById('draw-button');
 
-function earnedIncomeDeduction(totalSalaryAnnual) {
-  if (totalSalaryAnnual <= 0) return 0;
-  if (totalSalaryAnnual <= 5_000_000) return totalSalaryAnnual * 0.7;
-  if (totalSalaryAnnual <= 15_000_000) {
-    return 3_500_000 + (totalSalaryAnnual - 5_000_000) * 0.4;
-  }
-  if (totalSalaryAnnual <= 45_000_000) {
-    return 7_500_000 + (totalSalaryAnnual - 15_000_000) * 0.15;
-  }
-  if (totalSalaryAnnual <= 100_000_000) {
-    return 12_000_000 + (totalSalaryAnnual - 45_000_000) * 0.05;
-  }
-  return 14_750_000 + (totalSalaryAnnual - 100_000_000) * 0.02;
-}
+    const drawLottoNumbers = () => {
+        lottoNumbersContainer.innerHTML = ''; // Clear previous numbers
+        drawButton.disabled = true;
+        drawButton.textContent = '추첨 중...';
 
-function progressiveIncomeTax(taxBase) {
-  if (taxBase <= 0) return 0;
-  const bracket = TAX_BRACKETS.find((b) => taxBase <= b.max) || TAX_BRACKETS[TAX_BRACKETS.length - 1];
-  return Math.max(0, taxBase * bracket.rate - bracket.quickDeduction);
-}
+        const numbers = new Set();
+        while (numbers.size < 6) {
+            numbers.add(Math.floor(Math.random() * 45) + 1);
+        }
+        const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
 
-function toMonthlyFromMode(pay, mode) {
-  return mode === "annual" ? pay / 12 : pay;
-}
+        sortedNumbers.forEach((number, index) => {
+            setTimeout(() => {
+                const numberElement = document.createElement('div');
+                numberElement.classList.add('lotto-number');
+                numberElement.textContent = number;
+                lottoNumbersContainer.appendChild(numberElement);
+                // Trigger animation by adding class after appending
+                setTimeout(() => numberElement.classList.add('drawn'), 10); 
+            }, index * 300); // 300ms delay for each number
+        });
 
-function readInputState() {
-  return {
-    payMode: state.payMode,
-    pay: toNumber(getEl("pay").value),
-    nontaxAnnual: toNumber(getEl("nontaxAnnual").value),
-    deps: Math.max(0, Number(getEl("deps").value || 0)),
-    taxMode: getEl("taxMode").value,
-    manualIncomeTax: toNumber(getEl("manualIncomeTax").value),
-  };
-}
+        setTimeout(() => {
+            drawButton.disabled = false;
+            drawButton.textContent = 'Draw Numbers';
+        }, sortedNumbers.length * 300); // Re-enable button after all animations
+    };
 
-function updateManualTaxVisibility() {
-  const isManual = getEl("taxMode").value === "manual";
-  getEl("manualTaxWrap").style.display = isManual ? "" : "none";
-}
+    if (drawButton) {
+        drawButton.addEventListener('click', drawLottoNumbers);
+    }
 
-function setMode(mode) {
-  state.payMode = mode;
-  const isAnnual = mode === "annual";
-  getEl("payLabel").textContent = isAnnual ? "연봉(세전)" : "월급(세전)";
-  document.querySelectorAll(".segbtn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.mode === mode);
-  });
-}
 
-function renderResult(result) {
-  getEl("netMonthly").textContent = formatKRW(result.netMonthly);
-  getEl("netAnnual").textContent = formatKRW(result.netAnnual);
-  getEl("deductMonthly").textContent = formatKRW(result.totalDeductMonthly);
+    // --- Face Classifier Logic ---
+    const faceModal = document.getElementById('face-modal');
+    const imageUploadInput = document.getElementById('image-upload');
+    const uploadedImageElement = document.getElementById('uploaded-image');
+    const classifyImageButton = document.getElementById('classify-image-button');
+    const labelContainer = document.querySelector('#face-modal #label-container');
+    const faceLoadingSpinner = document.getElementById('face-loading-spinner');
 
-  getEl("netMonthlyDesc").textContent = `세전 ${formatKRW(result.grossMonthly)} - 공제 ${formatKRW(result.totalDeductMonthly)}`;
-  getEl("netAnnualDesc").textContent = `세전 ${formatKRW(result.grossAnnual)} - 공제 ${formatKRW(result.totalDeductAnnual)}`;
-  getEl("deductMonthlyDesc").textContent = `연 ${formatKRW(result.totalDeductAnnual)} 기준`;
+    const TM_URL = "https://teachablemachine.withgoogle.com/models/bk89dlKo6/";
+    let faceModel, maxPredictions;
+    let isFaceModelLoaded = false;
 
-  const breakdown = [
-    ["국민연금", result.nationalPensionMonthly],
-    ["건강보험", result.healthInsuranceMonthly],
-    ["장기요양보험", result.longTermCareMonthly],
-    ["고용보험", result.employmentInsuranceMonthly],
-    ["소득세", result.incomeTaxMonthly],
-    ["지방소득세", result.localIncomeTaxMonthly],
-  ];
+    async function initFaceClassifierModel() {
+        if (isFaceModelLoaded) return;
+        labelContainer.innerHTML = '<div>모델을 로딩 중입니다...</div>';
+        labelContainer.style.display = 'block'; // Ensure labelContainer is visible
+        faceLoadingSpinner.style.display = 'block'; // Show spinner
+        try {
+            const modelURL = TM_URL + "model.json";
+            const metadataURL = TM_URL + "metadata.json";
+            faceModel = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = faceModel.getTotalClasses();
+            isFaceModelLoaded = true;
+            labelContainer.innerHTML = '<div>모델 로딩 완료. 이미지를 업로드하세요.</div>';
+        } catch (error) {
+            console.error("Failed to load face classifier model:", error);
+            labelContainer.innerHTML = '<div>모델 로딩에 실패했습니다.</div>';
+        } finally {
+            faceLoadingSpinner.style.display = 'none'; // Hide spinner
+        }
+    }
 
-  const breakdownHtml = breakdown
-    .map(
-      ([name, value]) =>
-        `<li class="item"><span class="l">${name}</span><span class="r">${formatKRW(value)}</span></li>`,
-    )
-    .join("");
-  getEl("breakdown").innerHTML = breakdownHtml;
+    imageUploadInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImageElement.src = e.target.result;
+                uploadedImageElement.style.display = 'block';
+                labelContainer.style.display = 'none'; // Hide labelContainer until classification
+                labelContainer.innerHTML = '';
+        labelContainer.style.display = 'none'; // Hide labelContainer
+                classifyImageButton.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            uploadedImageElement.src = '#';
+            uploadedImageElement.style.display = 'none';
+            labelContainer.innerHTML = '';
+            labelContainer.style.display = 'none'; // Hide labelContainer
+            classifyImageButton.style.display = 'none';
+        }
+    });
 
-  const assumptions = [
-    `국민연금 근로자 부담 ${Math.round(INSURANCE_RATES_2026.nationalPension * 10000) / 100}%`,
-    `건강보험 근로자 부담 ${Math.round(INSURANCE_RATES_2026.healthInsurance * 10000) / 100}%`,
-    `장기요양보험 건강보험료의 ${Math.round(INSURANCE_RATES_2026.longTermCareOnHealth * 10000) / 100}%`,
-    `고용보험 근로자 부담 ${Math.round(INSURANCE_RATES_2026.employmentInsurance * 10000) / 100}%`,
-    "기본공제: 본인 + 부양가족 1인당 연 1,500,000원",
-    "소득세: 종합소득세 과세표준 구간(누진공제) 기반 추정",
-  ];
-  getEl("assumptions").innerHTML = assumptions
-    .map((text) => `<li class="item"><span class="l">${text}</span></li>`)
-    .join("");
-}
+    classifyImageButton.addEventListener('click', async () => {
+        if (!isFaceModelLoaded) {
+            labelContainer.innerHTML = '<div>모델이 아직 로딩되지 않았습니다.</div>';
+            labelContainer.style.display = 'block'; // Show message
+            return;
+        }
+        if (uploadedImageElement.src && uploadedImageElement.src !== '#') {
+            classifyImageButton.disabled = true;
+            classifyImageButton.textContent = '분석 중...';
+            faceLoadingSpinner.style.display = 'block'; // Show spinner
+            labelContainer.innerHTML = ''; // Clear previous results
+            labelContainer.style.display = 'block'; // Ensure labelContainer is visible for results
 
-function calculate() {
-  const input = readInputState();
-  if (!input.pay || input.pay <= 0) {
-    alert("급여를 입력해주세요.");
-    return;
-  }
+            try {
+                const prediction = await faceModel.predict(uploadedImageElement);
+                
+                prediction.sort((a, b) => b.probability - a.probability); // Sort by probability
 
-  const grossMonthly = toMonthlyFromMode(input.pay, input.payMode);
-  const grossAnnual = grossMonthly * 12;
-  const nontaxAnnual = Math.min(input.nontaxAnnual, grossAnnual);
+                prediction.forEach((p, index) => {
+                    setTimeout(() => {
+                        const probability = (p.probability * 100).toFixed(1);
+                        const resultDiv = document.createElement('div');
+                        resultDiv.style.animationDelay = `${index * 0.1}s`; // Stagger animation
+                        resultDiv.innerHTML = `
+                            <span>${p.className}:</span>
+                            <div class="confidence-bar-container">
+                                <div class="confidence-bar" style="width: ${probability}%;"></div>
+                            </div>
+                            <span>${probability}%</span>
+                        `;
+                        labelContainer.appendChild(resultDiv);
+                    }, index * 150); // Stagger results display
+                });
 
-  const nationalPensionMonthly = grossMonthly * INSURANCE_RATES_2026.nationalPension;
-  const healthInsuranceMonthly = grossMonthly * INSURANCE_RATES_2026.healthInsurance;
-  const longTermCareMonthly = healthInsuranceMonthly * INSURANCE_RATES_2026.longTermCareOnHealth;
-  const employmentInsuranceMonthly = grossMonthly * INSURANCE_RATES_2026.employmentInsurance;
-  const socialInsuranceMonthly =
-    nationalPensionMonthly + healthInsuranceMonthly + longTermCareMonthly + employmentInsuranceMonthly;
-  const socialInsuranceAnnual = socialInsuranceMonthly * 12;
+            } catch (error) {
+                console.error("Prediction failed:", error);
+                labelContainer.innerHTML = '<div>분류 중 오류가 발생했습니다.</div>';
+            } finally {
+                classifyImageButton.disabled = false;
+                classifyImageButton.textContent = '이미지 분류';
+                faceLoadingSpinner.style.display = 'none'; // Hide spinner
+            }
+        } else {
+            labelContainer.innerHTML = '<div>분석할 이미지를 먼저 업로드해주세요.</div>';
+            labelContainer.style.display = 'block'; // Show message
+        }
+    });
 
-  let incomeTaxMonthly = 0;
-  let localIncomeTaxMonthly = 0;
-  if (input.taxMode === "manual") {
-    incomeTaxMonthly = input.manualIncomeTax;
-    localIncomeTaxMonthly = incomeTaxMonthly * 0.1;
-  } else {
-    const salaryIncomeAnnual = Math.max(0, grossAnnual - nontaxAnnual);
-    const earnedDeduction = earnedIncomeDeduction(salaryIncomeAnnual);
-    const personalDeduction = (1 + input.deps) * 1_500_000;
-    const taxBase = Math.max(0, salaryIncomeAnnual - earnedDeduction - personalDeduction - socialInsuranceAnnual);
-    const incomeTaxAnnual = progressiveIncomeTax(taxBase);
-    const localIncomeTaxAnnual = incomeTaxAnnual * 0.1;
-    incomeTaxMonthly = incomeTaxAnnual / 12;
-    localIncomeTaxMonthly = localIncomeTaxAnnual / 12;
-  }
+    function resetFaceClassifierUI() {
+        uploadedImageElement.src = '#';
+        uploadedImageElement.style.display = 'none';
+        imageUploadInput.value = ''; // Clear file input
+        labelContainer.innerHTML = '';
+        classifyImageButton.style.display = 'none';
+        classifyImageButton.disabled = false;
+        classifyImageButton.textContent = '이미지 분류';
+        faceLoadingSpinner.style.display = 'none';
+    }
 
-  const totalDeductMonthly =
-    socialInsuranceMonthly + incomeTaxMonthly + localIncomeTaxMonthly;
-  const totalDeductAnnual = totalDeductMonthly * 12;
-  const netMonthly = Math.max(0, grossMonthly - totalDeductMonthly);
-  const netAnnual = Math.max(0, grossAnnual - totalDeductAnnual);
 
-  renderResult({
-    grossMonthly,
-    grossAnnual,
-    nontaxAnnual,
-    nationalPensionMonthly,
-    healthInsuranceMonthly,
-    longTermCareMonthly,
-    employmentInsuranceMonthly,
-    incomeTaxMonthly,
-    localIncomeTaxMonthly,
-    totalDeductMonthly,
-    totalDeductAnnual,
-    netMonthly,
-    netAnnual,
-  });
-}
+    // --- Smooth Scrolling ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
 
-function copyLink() {
-  const input = readInputState();
-  const params = new URLSearchParams({
-    mode: input.payMode,
-    pay: String(input.pay),
-    nontaxAnnual: String(input.nontaxAnnual),
-    deps: String(input.deps),
-    taxMode: input.taxMode,
-    manualIncomeTax: String(input.manualIncomeTax),
-  });
-  const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-  navigator.clipboard
-    .writeText(url)
-    .then(() => alert("입력값 링크를 복사했습니다."))
-    .catch(() => alert("클립보드 복사에 실패했습니다."));
-}
-
-function restoreFromQuery() {
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get("mode");
-  if (mode === "monthly" || mode === "annual") setMode(mode);
-
-  const pay = Number(params.get("pay") || 0);
-  const nontaxAnnual = Number(params.get("nontaxAnnual") || 0);
-  const deps = Number(params.get("deps") || 0);
-  const taxMode = params.get("taxMode");
-  const manualIncomeTax = Number(params.get("manualIncomeTax") || 0);
-
-  if (pay > 0) getEl("pay").value = KRW.format(pay);
-  if (nontaxAnnual > 0) getEl("nontaxAnnual").value = KRW.format(nontaxAnnual);
-  if (deps >= 0) getEl("deps").value = String(deps);
-  if (taxMode === "estimate" || taxMode === "manual") getEl("taxMode").value = taxMode;
-  if (manualIncomeTax > 0) getEl("manualIncomeTax").value = KRW.format(manualIncomeTax);
-  updateManualTaxVisibility();
-}
-
-function init() {
-  setMode("monthly");
-  restoreFromQuery();
-  updateManualTaxVisibility();
-
-  getEl("pay").addEventListener("input", formatInputOnType);
-  getEl("nontaxAnnual").addEventListener("input", formatInputOnType);
-  getEl("manualIncomeTax").addEventListener("input", formatInputOnType);
-  getEl("taxMode").addEventListener("change", updateManualTaxVisibility);
-  getEl("calc").addEventListener("click", calculate);
-  getEl("copyLink").addEventListener("click", copyLink);
-
-  document.querySelectorAll(".segbtn").forEach((btn) => {
-    btn.addEventListener("click", () => setMode(btn.dataset.mode));
-  });
-}
-
-init();
+});
