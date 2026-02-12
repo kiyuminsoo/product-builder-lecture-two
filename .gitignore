@@ -1,9 +1,0 @@
-# Logs
-*.log
-# Firebase debug log
-firebase-debug.log
-
-# Directories
-# firebase logs
-firebase-debug.log
-.firebase/
